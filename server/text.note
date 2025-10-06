@@ -1,0 +1,18 @@
+
+bun add -D prettier-plugin-prisma
+
+"scripts": {
+  "dev": "nodemon --watch src --exec ts-node src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js"
+}
+
+
+
+
+bun add -D prisma
+bun add @prisma/client
+bunx prisma init
+
+bunx prisma migrate dev --name init
+bunx prisma generate
