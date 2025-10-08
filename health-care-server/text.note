@@ -16,14 +16,16 @@ bunx prisma init
 
 
 
+
 bunx prisma migrate dev --name init
 bunx prisma generate
+
+bunx prisma migrate reset
 
 
 
 touch user.routes.ts user.controller.ts user.service.ts 
 
-bunx prisma generate --config=prisma.config.ts
 
 
 >>>>>>>>>>>>>>>>

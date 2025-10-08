@@ -3,14 +3,14 @@ import express, { Application, Request, Response } from "express";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import router from "./app/routes";
-import _env from "./config";
+import config from "./config";
 
 const app: Application = express();
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
-  }),
+  })
 );
 
 //parser
@@ -22,7 +22,7 @@ app.use("/api/v1", router);
 app.get("/", (req: Request, res: Response) => {
   res.send({
     message: "Server is running..",
-    environment: _env.node_env,
+    environment: config.node_env,
     uptime: process.uptime().toFixed(2) + " sec",
     timeStamp: new Date().toISOString(),
   });

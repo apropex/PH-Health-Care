@@ -1,5 +1,5 @@
 //
 
-export default function joinString(params: string[]): string {
+export default function joinString(params: (string | number)[]): string {
   return params?.join("") ?? "";
 }
