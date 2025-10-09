@@ -23,6 +23,48 @@ const createPatient = catchAsync(async (req, res) => {
   });
 });
 
+//
+
+const createAdmin = catchAsync(async (req, res) => {
+  const payload = req.body;
+
+  if (req.file) {
+    const uploadResult = await fileUploader(req.file);
+    if (uploadResult?.secure_url) {
+      payload.admin.profilePhoto = uploadResult.secure_url;
+    }
+  }
+
+  const result = await services.createAdmin(payload);
+
+  sendResponse(res, {
+    message: "Admin created successfully",
+    data: result,
+  });
+});
+
+//
+
+const createDoctor = catchAsync(async (req, res) => {
+  const payload = req.body;
+
+  if (req.file) {
+    const uploadResult = await fileUploader(req.file);
+    if (uploadResult?.secure_url) {
+      payload.doctor.profilePhoto = uploadResult.secure_url;
+    }
+  }
+
+  const result = await services.createDoctor(payload);
+
+  sendResponse(res, {
+    message: "Doctor created successfully",
+    data: result,
+  });
+});
+
 export default {
   createPatient,
+  createAdmin,
+  createDoctor,
 };

@@ -9,6 +9,14 @@ interface iENV {
   port: number;
   database_url: string;
   bcrypt_salt: number;
+  jwt: {
+    access_token_secret: string;
+    access_token_algorithm: string;
+    access_token_expire_time: string;
+    refresh_token_secret: string;
+    refresh_token_algorithm: string;
+    refresh_token_expire_time: string;
+  };
   cloudinary: {
     cloud_name: string;
     api_key: string;
@@ -21,6 +29,14 @@ const _env = {
   port: Number(process.env.PORT),
   database_url: process.env.DATABASE_URL,
   bcrypt_salt: Number(process.env.BCRYPT_SALT),
+  jwt: {
+    access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+    access_token_algorithm: process.env.ACCESS_TOKEN_ALGORITHM,
+    access_token_expire_time: process.env.ACCESS_TOKEN_EXPIRE_TIME,
+    refresh_token_secret: process.env.REFRESH_TOKEN_SECRET,
+    refresh_token_algorithm: process.env.REFRESH_TOKEN_ALGORITHM,
+    refresh_token_expire_time: process.env.REFRESH_TOKEN_EXPIRE_TIME,
+  },
   cloudinary: {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -30,4 +46,7 @@ const _env = {
 
 envChecker(_env);
 
+//
+
+export const isDev = _env.node_env === "development";
 export default _env;
