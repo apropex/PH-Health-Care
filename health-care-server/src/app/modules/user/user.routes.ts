@@ -1,3 +1,7 @@
+//
+
+//* USER ROUTES *//
+
 import { Router } from "express";
 import { singleFileUploader } from "../../../helper/multer.controller";
 import validateRequest from "../../middlewares/validateRequest";
@@ -9,6 +13,8 @@ import {
 } from "./user.validation";
 
 const userRouter = Router();
+
+userRouter.get("/", controllers.getAllUsers);
 
 userRouter.post(
   "/create-patient",

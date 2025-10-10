@@ -1,4 +1,12 @@
+//
+
+//* USER SERVICES *//
+
+import { Prisma } from "@prisma/client";
 import { buildHash } from "../../../utils/bcrypt";
+import configureQuery from "../../../utils/configureQuery";
+import { userSearchFields } from "../../constants/searchFields";
+import { iQuery } from "../../shared/global-interfaces";
 import { prisma } from "../../shared/prisma";
 import { iCreateAdmin, iCreateDoctor, iCreatePatient } from "./user.interface";
 
@@ -80,8 +88,49 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
   });
 };
 
+//
+
+const getAllUsers = async (query: iQuery) => {
+  const { page, take, skip, orderBy, search, filters } = configureQuery(
+    query,
+    ...userSearchFields,
+  );
+
+  let where: Prisma.UserWhereInput = {};
+
+  if (search) {
+    where.email = {
+      contains: search as string,
+      mode: "insensitive",
+    };
+  }
+
+  if (filters && Object.keys(filters).length > 0) {
+    where = { ...where, ...filters } as Prisma.UserWhereInput;
+  }
+
+  const [users, total_data, filtered_data] = await Promise.all([
+    prisma.user.findMany({ where, skip, take, orderBy }),
+    prisma.user.count(),
+    prisma.user.count({ where }),
+  ]);
+
+  return {
+    data: users,
+    meta: {
+      total_data,
+      filtered_data,
+      total_page: Math.ceil(filtered_data / take),
+      present_page: page,
+      skip,
+      limit: take,
+    },
+  };
+};
+
 export default {
   createPatient,
   createAdmin,
   createDoctor,
+  getAllUsers,
 };

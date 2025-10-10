@@ -1,3 +1,7 @@
+//
+
+//* USER CONTROLLERS *//
+
 import fileUploader from "../../../lib/fileUploader";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
@@ -63,8 +67,19 @@ const createDoctor = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const { data, meta } = await services.getAllUsers(req.query);
+
+  sendResponse(res, {
+    message: "All users retrieved successfully",
+    data,
+    meta,
+  });
+});
+
 export default {
   createPatient,
   createAdmin,
   createDoctor,
+  getAllUsers,
 };
