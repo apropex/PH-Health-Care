@@ -4,10 +4,11 @@
 
 import { Prisma } from "@prisma/client";
 import { buildHash } from "../../../utils/bcrypt";
-import configureQuery from "../../../utils/configureQuery";
-import { userSearchFields } from "../../constants/searchFields";
-import { iQuery } from "../../shared/global-interfaces";
+import configureQuery, { getSearchFilters } from "../../../utils/configureQuery";
+import { checkBoolean } from "../../../utils/fieldsChecker";
+import { iQuery } from "../../shared/global-query-interfaces";
 import { prisma } from "../../shared/prisma";
+import { userBooleanFields, userFilterFields, userSearchFields } from "./user.constants";
 import { iCreateAdmin, iCreateDoctor, iCreatePatient } from "./user.interface";
 
 //
@@ -91,23 +92,18 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
 //
 
 const getAllUsers = async (query: iQuery) => {
+  const filteredQuery = checkBoolean(query, userBooleanFields);
+
   const { page, take, skip, orderBy, search, filters } = configureQuery(
-    query,
-    ...userSearchFields,
+    filteredQuery,
+    userFilterFields,
   );
 
-  let where: Prisma.UserWhereInput = {};
-
-  if (search) {
-    where.email = {
-      contains: search as string,
-      mode: "insensitive",
-    };
-  }
-
-  if (filters && Object.keys(filters).length > 0) {
-    where = { ...where, ...filters } as Prisma.UserWhereInput;
-  }
+  const where = getSearchFilters(
+    userSearchFields,
+    search as string,
+    filters,
+  ) as Prisma.UserWhereInput;
 
   const [users, total_data, filtered_data] = await Promise.all([
     prisma.user.findMany({ where, skip, take, orderBy }),
