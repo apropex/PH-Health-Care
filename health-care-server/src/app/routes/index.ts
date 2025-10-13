@@ -1,17 +1,27 @@
 import express from "express";
-import authRouter from "../modules/auth/auth.routes";
-import userRouter from "../modules/user/user.routes";
+import authRoutes from "../modules/auth/auth.routes";
+import doctorScheduleRoutes from "../modules/doctorSchedule/doctorSchedule.routes";
+import scheduleRoutes from "../modules/schedule/schedule.routes";
+import userRoutes from "../modules/user/user.routes";
 
 const router = express.Router();
 
 [
   {
     path: "/user",
-    route: userRouter,
+    route: userRoutes,
   },
   {
     path: "/auth",
-    route: authRouter,
+    route: authRoutes,
+  },
+  {
+    path: "/schedule",
+    route: scheduleRoutes,
+  },
+  {
+    path: "/doctor-schedule",
+    route: doctorScheduleRoutes,
   },
 
   //

@@ -60,3 +60,10 @@ export interface iDoctorSearchQuery extends iPaginationAndSearchQuery {
   designation?: string;
   isDeleted?: string;
 }
+
+//* SCHEDULE QUERY INTERFACES
+
+export interface iScheduleSearchQuery extends iPaginationAndSearchQuery {
+  startDateTime?: string;
+  endDateTime?: string;
+}

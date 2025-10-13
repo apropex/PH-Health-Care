@@ -24,7 +24,7 @@ bunx prisma migrate reset
 
 
 
-touch user.routes.ts user.controller.ts user.service.ts 
+touch schedule.routes.ts schedule.controller.ts schedule.service.ts 
 
 
 

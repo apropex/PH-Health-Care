@@ -4,11 +4,17 @@
 
 import { Prisma } from "@prisma/client";
 import { buildHash } from "../../../utils/bcrypt";
-import configureQuery, { getSearchFilters } from "../../../utils/configureQuery";
+import configureQuery, {
+  getSearchFilters,
+} from "../../../utils/configureQuery";
 import { checkBoolean } from "../../../utils/fieldsChecker";
 import { iQuery } from "../../shared/global-query-interfaces";
 import { prisma } from "../../shared/prisma";
-import { userBooleanFields, userFilterFields, userSearchFields } from "./user.constants";
+import {
+  userBooleanFields,
+  userFilterFields,
+  userSearchFields,
+} from "./user.constants";
 import { iCreateAdmin, iCreateDoctor, iCreatePatient } from "./user.interface";
 
 //
@@ -16,7 +22,9 @@ import { iCreateAdmin, iCreateDoctor, iCreatePatient } from "./user.interface";
 const createPatient = async ({ patient, user }: iCreatePatient) => {
   const hashed = await buildHash(user.password);
 
-  const userExists = !!(await prisma.user.count({ where: { email: user.email } }));
+  const userExists = !!(await prisma.user.count({
+    where: { email: user.email },
+  }));
 
   if (userExists) throw new Error("User already exists");
 
@@ -42,7 +50,9 @@ const createPatient = async ({ patient, user }: iCreatePatient) => {
 const createAdmin = async ({ admin, user }: iCreateAdmin) => {
   const hashed = await buildHash(user.password);
 
-  const userExists = !!(await prisma.user.count({ where: { email: user.email } }));
+  const userExists = !!(await prisma.user.count({
+    where: { email: user.email },
+  }));
 
   if (userExists) throw new Error("User already exists");
 
@@ -68,7 +78,9 @@ const createAdmin = async ({ admin, user }: iCreateAdmin) => {
 const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
   const hashed = await buildHash(user.password);
 
-  const userExists = !!(await prisma.user.count({ where: { email: user.email } }));
+  const userExists = !!(await prisma.user.count({
+    where: { email: user.email },
+  }));
 
   if (userExists) throw new Error("User already exists");
 
@@ -99,11 +111,11 @@ const getAllUsers = async (query: iQuery) => {
     userFilterFields,
   );
 
-  const where = getSearchFilters(
-    userSearchFields,
-    search as string,
+  const where = getSearchFilters({
+    searchFields: userSearchFields,
+    search,
     filters,
-  ) as Prisma.UserWhereInput;
+  }) as Prisma.UserWhereInput;
 
   const [users, total_data, filtered_data] = await Promise.all([
     prisma.user.findMany({ where, skip, take, orderBy }),

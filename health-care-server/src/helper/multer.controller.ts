@@ -18,19 +18,25 @@ const storage = multer.diskStorage({
       "-",
       Date.now(),
       "-",
-      Math.round(Math.random() * 1000)
+      Math.round(Math.random() * 1000),
     );
     const ext = extname(file.originalname);
     cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
   },
 });
 
-const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: any) => {
+const fileFilter = (
+  req: Express.Request,
+  file: Express.Multer.File,
+  cb: any,
+) => {
   const allowed = /jpeg|jpg|png|pdf|webp/;
   const ext = path.extname(file.originalname).toLowerCase();
   if (allowed.test(ext)) cb(null, true);
   else cb(new Error("Unsupported file type"), false);
 };
 
-export const singleFileUploader = multer({ storage, fileFilter }).single;
-export const multiFileUploader = multer({ storage, fileFilter }).array;
+const upload = multer({ storage, fileFilter });
+
+export const singleFileUploader = upload.single("file");
+export const multiFileUploader = upload.array("files");

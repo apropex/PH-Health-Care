@@ -20,7 +20,7 @@ export default function configureQuery<
     [(sortBy as string) || "createdAt"]: sortOrder === "asc" ? "asc" : "desc",
   };
 
-  return { page, take, skip, orderBy, search, filters };
+  return { page, take, skip, orderBy, search: search as string, filters };
 }
 
 //* GET SEARCH FILTERS
@@ -29,14 +29,20 @@ interface iWhereInputs {
   AND: { [key: string]: string }[];
 }
 
-export function getSearchFilters<T extends iWhereInputs>(
-  searchFields: string[],
-  search: string,
-  filters: iQuery,
-): T {
+interface iProps {
+  searchFields?: string[];
+  search?: string;
+  filters?: iQuery;
+}
+
+export function getSearchFilters<T extends iWhereInputs>({
+  searchFields,
+  search,
+  filters,
+}: iProps): T {
   const where: T = {} as T;
 
-  if (search) {
+  if (search && Array.isArray(searchFields)) {
     where.OR = searchFields.map((field) => ({
       [field]: { contains: search as string, mode: "insensitive" },
     }));

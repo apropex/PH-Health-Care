@@ -4,7 +4,7 @@
 
 import fileUploader from "../../../lib/fileUploader";
 import catchAsync from "../../shared/catchAsync";
-import sendResponse from "../../shared/sendResponse";
+import _response from "../../shared/sendResponse";
 import services from "./user.service";
 
 //
@@ -21,7 +21,7 @@ const createPatient = catchAsync(async (req, res) => {
 
   const result = await services.createPatient(payload);
 
-  sendResponse(res, {
+  _response(res, {
     message: "Patient created successfully",
     data: result,
   });
@@ -41,7 +41,7 @@ const createAdmin = catchAsync(async (req, res) => {
 
   const result = await services.createAdmin(payload);
 
-  sendResponse(res, {
+  _response(res, {
     message: "Admin created successfully",
     data: result,
   });
@@ -61,7 +61,7 @@ const createDoctor = catchAsync(async (req, res) => {
 
   const result = await services.createDoctor(payload);
 
-  sendResponse(res, {
+  _response(res, {
     message: "Doctor created successfully",
     data: result,
   });
@@ -70,7 +70,7 @@ const createDoctor = catchAsync(async (req, res) => {
 const getAllUsers = catchAsync(async (req, res) => {
   const { data, meta } = await services.getAllUsers(req.query);
 
-  sendResponse(res, {
+  _response(res, {
     message: "All users retrieved successfully",
     data,
     meta,

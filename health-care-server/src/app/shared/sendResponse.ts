@@ -1,6 +1,7 @@
 import { Response } from "express";
+import sCode from "../../utils/statusCode";
 
-const sendResponse = <T>(
+export default function _response<T>(
   res: Response,
   jsonData: {
     statusCode?: number;
@@ -18,13 +19,11 @@ const sendResponse = <T>(
     };
     data?: T | null | undefined;
   },
-) => {
-  res.status(jsonData.statusCode || 200).json({
+) {
+  res.status(jsonData.statusCode || sCode.OK).json({
     success: jsonData.success || true,
     message: jsonData.message,
     meta: jsonData.meta ?? null,
     data: jsonData.data ?? null,
   });
-};
-
-export default sendResponse;
+}

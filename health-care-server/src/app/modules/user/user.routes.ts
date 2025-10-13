@@ -12,29 +12,29 @@ import {
   CreatePatientSchema,
 } from "./user.validation";
 
-const userRouter = Router();
+const router = Router();
 
-userRouter.get("/", controllers.getAllUsers);
+router.get("/", controllers.getAllUsers);
 
-userRouter.post(
+router.post(
   "/create-patient",
-  singleFileUploader("file"),
+  singleFileUploader,
   validateRequest(CreatePatientSchema),
   controllers.createPatient,
 );
 
-userRouter.post(
+router.post(
   "/create-admin",
-  singleFileUploader("file"),
+  singleFileUploader,
   validateRequest(CreateAdminSchema),
   controllers.createAdmin,
 );
 
-userRouter.post(
+router.post(
   "/create-doctor",
-  singleFileUploader("file"),
+  singleFileUploader,
   validateRequest(CreateDoctorSchema),
   controllers.createDoctor,
 );
 
-export default userRouter;
+export default router;
