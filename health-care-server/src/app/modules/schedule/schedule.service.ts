@@ -133,7 +133,7 @@ const getAllSchedule = async (req: Request) => {
   );
 
   const doctorSchedules = await prisma.doctorSchedule.findMany({
-    where: { doctorId: req.decoded?.secondaryId || "" },
+    where: { doctorId: req.decoded?.secondaryId ?? "" },
     select: { scheduleId: true },
   });
 
@@ -144,6 +144,12 @@ const getAllSchedule = async (req: Request) => {
       { startDateTime: { gte: filters.startDateTime as string } },
       { endDateTime: { lte: filters.endDateTime as string } },
     ];
+  }
+
+  if (Array.isArray(doctorSchedules) && doctorSchedules.length > 0) {
+    where.id = {
+      notIn: doctorSchedules.map(({ scheduleId }) => scheduleId),
+    };
   }
 
   const [schedules, total_data, filtered_data] = await Promise.all([
