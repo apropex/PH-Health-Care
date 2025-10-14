@@ -11,10 +11,8 @@ interface iENV {
   bcrypt_salt: number;
   jwt: {
     access_token_secret: string;
-    access_token_algorithm: string;
     access_token_expire_time: string;
     refresh_token_secret: string;
-    refresh_token_algorithm: string;
     refresh_token_expire_time: string;
   };
   cloudinary: {
@@ -31,10 +29,8 @@ const _env = {
   bcrypt_salt: Number(process.env.BCRYPT_SALT),
   jwt: {
     access_token_secret: process.env.ACCESS_TOKEN_SECRET,
-    access_token_algorithm: process.env.ACCESS_TOKEN_ALGORITHM,
     access_token_expire_time: process.env.ACCESS_TOKEN_EXPIRE_TIME,
     refresh_token_secret: process.env.REFRESH_TOKEN_SECRET,
-    refresh_token_algorithm: process.env.REFRESH_TOKEN_ALGORITHM,
     refresh_token_expire_time: process.env.REFRESH_TOKEN_EXPIRE_TIME,
   },
   cloudinary: {

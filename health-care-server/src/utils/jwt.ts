@@ -2,28 +2,42 @@ import { User } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import _env from "../config";
 
-interface iTokenProps {
-  userPayload: User;
-  secret?: string;
-  expire?: string;
-}
+type UserPayload = Partial<User> & { secondaryId?: string };
 
-const env = _env.jwt;
-
-const payloadMaker = ({ id, email, role }: User) => {
-  return { id, email, role };
+const payloadMaker = ({
+  id,
+  secondaryId,
+  email,
+  password,
+  role,
+  needPasswordChange,
+  status,
+}: UserPayload) => {
+  return {
+    id,
+    secondaryId,
+    email,
+    password,
+    role,
+    needPasswordChange,
+    status,
+  };
 };
 
 //* GENERATE ACCESS TOKEN
 export const generateAccessToken = (
-  userPayload: User,
-  secret = env.access_token_secret,
-  expiresIn = env.access_token_expire_time,
+  userPayload: UserPayload,
+  { secretKey, period }: { secretKey?: string; period?: string } = {},
 ) => {
-  const access_token = jwt.sign(payloadMaker(userPayload), secret, {
-    algorithm: env.access_token_algorithm,
-    expiresIn,
-  } as jwt.SignOptions);
+  //
+
+  const payload = payloadMaker(userPayload);
+  const secret = secretKey || _env.jwt.access_token_secret;
+  const options = {
+    expiresIn: period || _env.jwt.access_token_expire_time,
+  } as jwt.SignOptions;
+
+  const access_token = jwt.sign(payload, secret, options);
 
   if (!access_token) throw new Error("Failed to generate access token");
 
@@ -32,14 +46,18 @@ export const generateAccessToken = (
 
 //* GENERATE REFRESH TOKEN
 export const generateRefreshToken = (
-  userPayload: User,
-  secret = env.refresh_token_secret,
-  expiresIn = env.refresh_token_expire_time,
+  userPayload: UserPayload,
+  { secretKey, period }: { secretKey?: string; period?: string } = {},
 ) => {
-  const refresh_token = jwt.sign(payloadMaker(userPayload), secret, {
-    algorithm: env.refresh_token_algorithm,
-    expiresIn,
-  } as jwt.SignOptions);
+  //
+
+  const payload = payloadMaker(userPayload);
+  const secret = secretKey || _env.jwt.refresh_token_secret;
+  const options = {
+    expiresIn: period || _env.jwt.refresh_token_expire_time,
+  } as jwt.SignOptions;
+
+  const refresh_token = jwt.sign(payload, secret, options);
 
   if (!refresh_token) throw new Error("Failed to generate refresh token");
 
@@ -48,14 +66,20 @@ export const generateRefreshToken = (
 
 //* VERIFY ACCESS TOKEN
 export const verifyAccessToken = (token: string): jwt.JwtPayload => {
-  const accessToken = jwt.verify(token, env.access_token_secret) as jwt.JwtPayload;
+  const accessToken = jwt.verify(
+    token,
+    _env.jwt.access_token_secret,
+  ) as jwt.JwtPayload;
   if (!accessToken) throw new Error("Token is not valid");
   return accessToken;
 };
 
 //* VERIFY REFRESH TOKEN
 export const verifyRefreshToken = (token: string): jwt.JwtPayload => {
-  const refreshToken = jwt.verify(token, env.refresh_token_secret) as jwt.JwtPayload;
+  const refreshToken = jwt.verify(
+    token,
+    _env.jwt.refresh_token_secret,
+  ) as jwt.JwtPayload;
   if (!refreshToken) throw new Error("Token is not valid");
   return refreshToken;
 };

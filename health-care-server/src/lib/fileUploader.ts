@@ -5,7 +5,10 @@ import cloudinary from "../config/cloudinary/cloudinary.config";
  * Uploads a file to Cloudinary with retry logic.
  * Automatically deletes local file after successful upload.
  */
-export default async function fileUploader(file: Express.Multer.File, maxRetries = 3) {
+export default async function fileUploader(
+  file: Express.Multer.File,
+  maxRetries = 3,
+) {
   let attempt = 0;
   let lastError: unknown;
 
@@ -20,7 +23,9 @@ export default async function fileUploader(file: Express.Multer.File, maxRetries
       // Upload success — delete local file
       await fs
         .unlink(file.path)
-        .catch((err) => console.warn("Warning: failed to delete local file:", err));
+        .catch((err) =>
+          console.warn("Warning: failed to delete local file:", err),
+        );
 
       return result;
     } catch (error) {
@@ -29,7 +34,7 @@ export default async function fileUploader(file: Express.Multer.File, maxRetries
 
       console.error(
         `Cloudinary upload failed (attempt ${attempt}/${maxRetries}):`,
-        (error as Error).message
+        (error as Error).message,
       );
 
       // Wait before retrying (exponential backoff)
@@ -39,9 +44,10 @@ export default async function fileUploader(file: Express.Multer.File, maxRetries
 
   // All retries failed — delete file to avoid storage buildup
   await fs.unlink(file.path).catch(() => {});
+
   throw new Error(
     `Failed to upload file to Cloudinary after ${maxRetries} attempts. ${
       (lastError as Error)?.message || ""
-    }`
+    }`,
   );
 }

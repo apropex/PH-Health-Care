@@ -15,10 +15,24 @@ import {
   userFilterFields,
   userSearchFields,
 } from "./user.constants";
-import { iCreateAdmin, iCreateDoctor, iCreatePatient } from "./user.interface";
+// import { iCreateAdmin, iCreateDoctor, iCreatePatient } from "./user.interface";
 
-//
+interface iCreatePatient {
+  patient: Omit<Prisma.PatientCreateInput, "user" | "email">;
+  user: Omit<Prisma.UserCreateInput, "admin" | "doctor" | "patient">;
+}
 
+interface iCreateAdmin {
+  admin: Omit<Prisma.AdminCreateInput, "user" | "email">;
+  user: Omit<Prisma.UserCreateInput, "admin" | "doctor" | "patient">;
+}
+
+interface iCreateDoctor {
+  doctor: Omit<Prisma.DoctorCreateInput, "user" | "doctorSchedules" | "email">;
+  user: Omit<Prisma.UserCreateInput, "admin" | "doctor" | "patient">;
+}
+
+// Patient
 const createPatient = async ({ patient, user }: iCreatePatient) => {
   const hashed = await buildHash(user.password);
 
@@ -29,7 +43,7 @@ const createPatient = async ({ patient, user }: iCreatePatient) => {
   if (userExists) throw new Error("User already exists");
 
   return await prisma.$transaction(async (trx) => {
-    await trx.user.create({
+    const createdUser = await trx.user.create({
       data: {
         ...user,
         password: hashed,
@@ -39,14 +53,17 @@ const createPatient = async ({ patient, user }: iCreatePatient) => {
     return await trx.patient.create({
       data: {
         ...patient,
-        email: user.email,
+        user: {
+          connect: {
+            email: createdUser.email,
+          },
+        },
       },
     });
   });
 };
 
-//
-
+// Admin
 const createAdmin = async ({ admin, user }: iCreateAdmin) => {
   const hashed = await buildHash(user.password);
 
@@ -57,24 +74,27 @@ const createAdmin = async ({ admin, user }: iCreateAdmin) => {
   if (userExists) throw new Error("User already exists");
 
   return await prisma.$transaction(async (trx) => {
-    await trx.user.create({
+    const createdUser = await trx.user.create({
       data: {
         ...user,
         password: hashed,
       },
     });
 
-    return await trx.patient.create({
+    return await trx.admin.create({
       data: {
         ...admin,
-        email: user.email,
+        user: {
+          connect: {
+            email: createdUser.email,
+          },
+        },
       },
     });
   });
 };
 
-//
-
+// Doctor
 const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
   const hashed = await buildHash(user.password);
 
@@ -85,17 +105,21 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
   if (userExists) throw new Error("User already exists");
 
   return await prisma.$transaction(async (trx) => {
-    await trx.user.create({
+    const createdUser = await trx.user.create({
       data: {
         ...user,
         password: hashed,
       },
     });
 
-    return await trx.patient.create({
+    return await trx.doctor.create({
       data: {
         ...doctor,
-        email: user.email,
+        user: {
+          connect: {
+            email: createdUser.email,
+          },
+        },
       },
     });
   });

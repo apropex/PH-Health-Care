@@ -11,7 +11,8 @@ export const roleVerifier =
     const token = req.cookies.accessToken;
 
     try {
-      if (!token) return next(new AppError(sCode.FORBIDDEN, "Token did not arrive"));
+      if (!token)
+        return next(new AppError(sCode.FORBIDDEN, "Token did not arrive"));
       const decoded = verifyAccessToken(token);
 
       if (!roles.includes(decoded.role))

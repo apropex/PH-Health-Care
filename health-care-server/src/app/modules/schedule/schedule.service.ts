@@ -4,10 +4,10 @@
 
 import { Prisma } from "@prisma/client";
 import { addHours, addMinutes, format, isBefore, parse } from "date-fns";
+import { Request } from "express";
 import { AppError } from "../../../error-handler/AppError";
 import configureQuery from "../../../utils/configureQuery";
 import sCode from "../../../utils/statusCode";
-import { iQuery } from "../../shared/global-query-interfaces";
 import { prisma } from "../../shared/prisma";
 import { scheduleFilterFields } from "./schedule.constants";
 
@@ -126,11 +126,16 @@ const createSchedule = async (payload: SchedulePayload) => {
   return schedules;
 };
 
-const getAllSchedule = async (query: iQuery) => {
+const getAllSchedule = async (req: Request) => {
   const { page, take, skip, orderBy, filters } = configureQuery(
-    query,
+    req.query,
     scheduleFilterFields,
   );
+
+  const doctorSchedules = await prisma.doctorSchedule.findMany({
+    where: { doctorId: req.decoded?.secondaryId || "" },
+    select: { scheduleId: true },
+  });
 
   const where: Prisma.ScheduleWhereInput = {};
 

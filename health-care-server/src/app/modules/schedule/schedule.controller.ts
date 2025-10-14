@@ -17,7 +17,7 @@ const createSchedule = catchAsync(async (req, res) => {
 });
 
 const getAllSchedule = catchAsync(async (req, res) => {
-  const { data, meta } = await services.getAllSchedule(req.query);
+  const { data, meta } = await services.getAllSchedule(req);
 
   _response(res, {
     message: "Schedule retrieved successfully",
