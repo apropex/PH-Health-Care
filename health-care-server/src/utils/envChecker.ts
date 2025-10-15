@@ -26,12 +26,14 @@ export function envChecker<T extends Record<string, any>>(
     if (value === undefined || value === null || value === "") {
       const errorMessage = `❌ Environment variable "${fullKey}" is missing or empty.`;
       console.error(errorMessage);
-      throw new Error(errorMessage); // TODO: change the Error to AppError
+      throw new Error(errorMessage); // TODO: change the Error to ApiError
     }
   });
 
   // Optional: Success message in non-production environments
   if (isDev && !parentKey) {
-    console.log("✅ All required environment variables are loaded successfully.");
+    console.log(
+      "✅ All required environment variables are loaded successfully.",
+    );
   }
 }

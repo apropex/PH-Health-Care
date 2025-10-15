@@ -5,7 +5,7 @@
 import { Prisma } from "@prisma/client";
 import { addHours, addMinutes, format, isBefore, parse } from "date-fns";
 import { Request } from "express";
-import { AppError } from "../../../error-handler/AppError";
+import { ApiError } from "../../../error-handler/ApiError";
 import configureQuery from "../../../utils/configureQuery";
 import sCode from "../../../utils/statusCode";
 import { prisma } from "../../shared/prisma";
@@ -76,7 +76,7 @@ const createSchedule = async (payload: SchedulePayload) => {
 
   // Validate input dates and times
   if (!startDate || !endDate || !startTime || !endTime) {
-    throw new AppError(
+    throw new ApiError(
       sCode.BAD_REQUEST,
       "Missing required fields: startDate, endDate, startTime, or endTime",
     );
