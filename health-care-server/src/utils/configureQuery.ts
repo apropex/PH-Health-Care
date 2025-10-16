@@ -3,15 +3,29 @@
 //* QUERY CONFIGURATION *\\
 
 import { iQuery } from "../app/shared/global-query-interfaces";
+import { checkBooleanAndNumber } from "./fieldsChecker";
 import pickQuery from "./pickQuery";
 
 //* CONFIGURE QUERY
+
+interface iOptions<K> {
+  filterFields: K[];
+  booleanFields?: K[];
+  numberFields?: K[];
+}
+
 export default function configureQuery<
   T extends Record<string, unknown>,
   K extends keyof T,
->(query: T, keys: K[]) {
+>(query: T, options: iOptions<K>) {
   const { limit, sortBy, sortOrder, search = "" } = query;
-  const filters = pickQuery(query, ...keys);
+
+  const filteredQuery = checkBooleanAndNumber(query, {
+    booleanFields: options.booleanFields,
+    numberFields: options.numberFields,
+  });
+
+  const filters = pickQuery(filteredQuery, ...options.filterFields);
 
   const page = Number(query.page || "1");
   const take = Number(limit || "12");

@@ -1,21 +1,10 @@
 
 bun add -D prettier-plugin-prisma
 
-"scripts": {
-  "dev": "nodemon --watch src --exec ts-node src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js"
-}
-
-
-
 
 bun add -D prisma@latest
 bun add @prisma/client@latest
 bunx prisma init
-
-
-
 
 bunx prisma migrate dev --name init
 bunx prisma generate
@@ -24,30 +13,8 @@ bunx prisma migrate reset
 
 
 
-touch schedule.routes.ts schedule.controller.ts schedule.service.ts 
+touch patient.routes.ts patient.controller.ts patient.service.ts patient.validation.ts patient.interface.ts patient.constants.ts 
 
 
-
->>>>>>>>>>>>>>>>
-// to import from @
-
-bun add tsconfig-paths
-bun add -D tsconfig-paths
-
-// package.json
-"scripts": {
-  "dev": "ts-node-dev -r tsconfig-paths/register src/server.ts"
-}
-
-// tsconfig.json 
-{
-  "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"]
-    }
-  },
-}
-<<<<<<<<<<<<<<<<<
 
 
