@@ -15,6 +15,7 @@ export const doctorFilterFields: iDoctor = [
   "currentWorkingPlace",
   "designation",
   "isDeleted",
+  "specialties",
 ];
 export const doctorSearchFields: iDoctor = [
   "name",

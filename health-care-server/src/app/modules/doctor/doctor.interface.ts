@@ -1,8 +1,6 @@
-import z from "zod";
-import { CreateDoctorSchema } from "./doctor.validation";
+import { Prisma } from "@prisma/client";
 
-export type iCreateDoctor = z.infer<typeof CreateDoctorSchema> & {
-  doctor: {
-    profilePhoto?: string;
-  };
-};
+export interface iCreateDoctor {
+  doctor: Omit<Prisma.DoctorCreateInput, "user" | "doctorSchedules" | "email">;
+  user: Omit<Prisma.UserCreateInput, "admin" | "doctor" | "patient">;
+}

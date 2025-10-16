@@ -59,6 +59,7 @@ export interface iDoctorSearchQuery extends iPaginationAndSearchQuery {
   currentWorkingPlace?: string;
   designation?: string;
   isDeleted?: string;
+  specialties?: string;
 }
 
 //* SCHEDULE QUERY INTERFACES

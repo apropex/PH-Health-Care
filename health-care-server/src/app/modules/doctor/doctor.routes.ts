@@ -15,4 +15,6 @@ router.post(
 
 router.get("/", controllers.getAllDoctors);
 
+router.patch("/:id", controllers.updateDoctor);
+
 export default router;

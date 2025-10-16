@@ -11,12 +11,11 @@ import {
   doctorNumberFields,
   doctorSearchFields,
 } from "./doctor.constants";
+import { iCreateDoctor } from "./doctor.interface";
 
-interface iCreateDoctor {
-  doctor: Omit<Prisma.DoctorCreateInput, "user" | "doctorSchedules" | "email">;
-  user: Omit<Prisma.UserCreateInput, "admin" | "doctor" | "patient">;
-}
+type WhereInput = Prisma.DoctorWhereInput;
 
+// create doctor
 const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
   const hashed = await buildHash(user.password);
 
@@ -47,6 +46,8 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
   });
 };
 
+// GET ALL DOCTORS
+
 const getAllDoctors = async (query: iQuery) => {
   const { page, take, skip, orderBy, search, filters } = configureQuery(query, {
     filterFields: doctorFilterFields,
@@ -54,14 +55,43 @@ const getAllDoctors = async (query: iQuery) => {
     numberFields: doctorNumberFields,
   });
 
+  const { specialties, ...filterFields } = filters;
+
   const where = getSearchFilters({
     searchFields: doctorSearchFields,
     search,
-    filters,
-  }) as Prisma.DoctorWhereInput;
+    filters: filterFields,
+  }) as WhereInput;
+
+  if (specialties) {
+    const specialtyCondition = {
+      doctorSpecialties: {
+        some: {
+          specialties: {
+            title: {
+              constants: specialties,
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+    };
+
+    if (Array.isArray(where?.AND)) {
+      where.AND = [...where.AND, specialtyCondition] as WhereInput;
+    }
+  }
+
+  const include = {
+    doctorSpecialties: {
+      include: {
+        specialties: true,
+      },
+    },
+  };
 
   const [doctors, total_data, filtered_data] = await Promise.all([
-    prisma.doctor.findMany({ where, orderBy, skip, take }),
+    prisma.doctor.findMany({ where, orderBy, skip, take, include }),
     prisma.doctor.count(),
     prisma.doctor.count({ where }),
   ]);
@@ -79,7 +109,84 @@ const getAllDoctors = async (query: iQuery) => {
   };
 };
 
+// update doctor
+
+/*
+received data
+
+{
+  "name": "Dr. Abdullah",
+  ...
+  "specialties": [
+      {
+          "id": "specialty id",
+          "isDelete": false
+      }
+  ]
+}
+
+*/
+
+interface iSpecialties {
+  id: string;
+  isDeleted: boolean;
+}
+
+const updateDoctor = async (
+  id: string,
+  payload: Partial<Prisma.DoctorUpdateInput & { specialties: iSpecialties[] }>,
+) => {
+  //
+  await prisma.doctor.findFirstOrThrow({ where: { id } });
+
+  const { specialties, ...doctorData } = payload;
+
+  return await prisma.$transaction(async (trx) => {
+    if (specialties && Array.isArray(specialties) && specialties.length) {
+      const deleteSpecialties = specialties.filter(
+        ({ isDeleted }) => isDeleted,
+      );
+      const createSpecialties = specialties.filter(
+        ({ isDeleted }) => !isDeleted,
+      );
+
+      for (const specialty of deleteSpecialties) {
+        await trx.doctorSpecialties.delete({
+          where: {
+            specialtiesId_doctorId: {
+              specialtiesId: specialty.id,
+              doctorId: id,
+            },
+          },
+        });
+      }
+
+      for (const specialty of createSpecialties) {
+        await trx.doctorSpecialties.create({
+          data: {
+            specialtiesId: specialty.id,
+            doctorId: id,
+          },
+        });
+      }
+    }
+
+    return await trx.doctor.update({
+      where: { id },
+      data: doctorData,
+      include: {
+        doctorSpecialties: {
+          include: {
+            specialties: true,
+          },
+        },
+      },
+    });
+  });
+};
+
 export default {
   createDoctor,
   getAllDoctors,
+  updateDoctor,
 };

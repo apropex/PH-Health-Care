@@ -31,4 +31,13 @@ const getAllDoctors = catchAsync(async (req, res) => {
   });
 });
 
-export default { createDoctor, getAllDoctors };
+const updateDoctor = catchAsync(async (req, res) => {
+  const result = await services.updateDoctor(req.params.id, req.body);
+
+  _response(res, {
+    message: "Doctor updated successfully",
+    data: result,
+  });
+});
+
+export default { createDoctor, getAllDoctors, updateDoctor };
