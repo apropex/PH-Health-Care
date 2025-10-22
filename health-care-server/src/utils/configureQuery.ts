@@ -39,7 +39,7 @@ export default function configureQuery<
 
 //* GET SEARCH FILTERS
 interface iWhereInputs {
-  OR: { [key: string]: { contains: string; mode: "insensitive" } }[];
+  OR: { [key: string]: { contains: string; mode: "insensitive" } }[] | any;
   AND: { [key: string]: string }[];
 }
 
@@ -56,6 +56,7 @@ export function getSearchFilters<T extends iWhereInputs>({
 }: iProps): T {
   const where: T = {} as T;
 
+  /*
   if (search && Array.isArray(searchFields)) {
     where.OR = searchFields.map((field) => ({
       [field]: { contains: search as string, mode: "insensitive" },
@@ -66,6 +67,39 @@ export function getSearchFilters<T extends iWhereInputs>({
     where.AND = Object.keys(filters).map((key) => ({
       [key]: (filters as Record<string, string>)[key],
     }));
+  }
+  */
+
+  if (search && Array.isArray(searchFields)) {
+    where.OR = searchFields.map((field) => {
+      let a = { contains: search as string, mode: "insensitive" };
+
+      field
+        .split(".")
+        .reverse()
+        .map((f) => {
+          a = { [f]: a } as any;
+        });
+
+      return a;
+    });
+  }
+
+  if (filters && Object.keys(filters).length) {
+    where.AND = Object.keys(filters).map((key) => {
+      const value = (filters as Record<string, string>)[key];
+
+      let a: any = value;
+
+      key
+        .split(".")
+        .reverse()
+        .forEach((k) => {
+          a = { [k]: a };
+        });
+
+      return a;
+    });
   }
 
   return where;

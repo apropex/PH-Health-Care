@@ -63,8 +63,22 @@ export interface iDoctorSearchQuery extends iPaginationAndSearchQuery {
 }
 
 //* SCHEDULE QUERY INTERFACES
-
 export interface iScheduleSearchQuery extends iPaginationAndSearchQuery {
   startDateTime?: string;
   endDateTime?: string;
+}
+
+//* APPOINTMENT QUERY INTERFACES
+export interface iAppointmentSearchQuery extends iPaginationAndSearchQuery {
+  status?: string;
+  paymentStatus?: string;
+}
+
+//* PRESCRIPTION QUERY INTERFACES
+export interface iPrescriptionSearchQuery extends iPaginationAndSearchQuery {
+  id?: string;
+  doctorId?: string;
+  patientId?: string;
+  email?: string;
+  name?: string;
 }

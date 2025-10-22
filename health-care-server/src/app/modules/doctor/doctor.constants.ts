@@ -4,9 +4,6 @@ import { iDoctorSearchQuery } from "../../shared/global-query-interfaces";
 type iDoctor = (keyof iDoctorSearchQuery)[];
 
 export const doctorFilterFields: iDoctor = [
-  "name",
-  "email",
-  "contactNumber",
   "registrationNumber",
   "experience",
   "gender",
@@ -23,6 +20,7 @@ export const doctorSearchFields: iDoctor = [
   "address",
   "currentWorkingPlace",
   "designation",
+  "contactNumber",
 ];
 export const doctorBooleanFields: iDoctor = ["isDeleted"];
 export const doctorNumberFields: iDoctor = ["experience", "appointmentFee"];

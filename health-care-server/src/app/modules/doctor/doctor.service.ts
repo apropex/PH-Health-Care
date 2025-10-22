@@ -80,9 +80,8 @@ const getAllDoctors = async (query: iQuery) => {
       },
     };
 
-    if (Array.isArray(where?.AND)) {
-      where.AND = [...where.AND, specialtyCondition] as WhereInput;
-    }
+    if (!Array.isArray(where?.AND)) where.AND = [];
+    where.AND.push(specialtyCondition as WhereInput);
   }
 
   const include = {
