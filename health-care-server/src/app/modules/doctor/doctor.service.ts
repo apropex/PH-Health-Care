@@ -1,4 +1,7 @@
 import { Prisma } from "@prisma/client";
+import httpStatus from "http-status";
+import ApiError from "../../../error-handler/ApiError";
+import openRouter from "../../../helper/openRouter";
 import { buildHash } from "../../../utils/bcrypt";
 import configureQuery, {
   getSearchFilters,
@@ -185,8 +188,28 @@ const updateDoctor = async (
   });
 };
 
+const getAISuggestion = async (payload: { symptoms: string }) => {
+  if (!(payload && payload.symptoms.trim())) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "symptoms is required");
+  }
+
+  const doctors = await prisma.doctor.findMany({
+    where: { isDeleted: false },
+    include: {
+      doctorSpecialties: {
+        include: {
+          specialties: true,
+        },
+      },
+    },
+  });
+
+  return await openRouter(payload, doctors);
+};
+
 export default {
   createDoctor,
   getAllDoctors,
   updateDoctor,
+  getAISuggestion,
 };

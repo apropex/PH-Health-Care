@@ -3,10 +3,18 @@ import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
+import paymentControllers from "./app/modules/payment/payment.controller";
 import router from "./app/routes";
 import config from "./config";
 
 const app: Application = express();
+
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  paymentControllers.handleStripeWebhookEvent,
+);
+
 app.use(
   cors({
     origin: "http://localhost:3000",

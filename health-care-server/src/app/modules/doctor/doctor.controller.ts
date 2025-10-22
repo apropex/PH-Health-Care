@@ -40,4 +40,12 @@ const updateDoctor = catchAsync(async (req, res) => {
   });
 });
 
-export default { createDoctor, getAllDoctors, updateDoctor };
+const getAISuggestion = catchAsync(async (req, res) => {
+  const result = await services.getAISuggestion(req.body);
+
+  _response(res, {
+    message: "AI suggestion retrieved successfully",
+  });
+});
+
+export default { createDoctor, getAllDoctors, updateDoctor, getAISuggestion };
