@@ -1,8 +1,10 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
+import nodeCron from "node-cron";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
+import appointmentServices from "./app/modules/appointment/appointment.service";
 import paymentControllers from "./app/modules/payment/payment.controller";
 import router from "./app/routes";
 import config from "./config";
@@ -26,6 +28,15 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+// NODE-CORN
+nodeCron.schedule("* * * * *", async () => {
+  try {
+    await appointmentServices.cancelUnpaidAppointments();
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 app.use("/api/v1", router);
 

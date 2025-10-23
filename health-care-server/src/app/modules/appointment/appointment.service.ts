@@ -1,4 +1,4 @@
-import { Prisma, UserRole } from "@prisma/client";
+import { PaymentStatus, Prisma, UserRole } from "@prisma/client";
 import { Request } from "express";
 import httpStatus from "http-status";
 import { JwtPayload } from "jsonwebtoken";
@@ -171,9 +171,49 @@ const updateAppointmentStatus = async (req: Request) => {
   });
 };
 
+const cancelUnpaidAppointments = async () => {
+  const expireTime = new Date(Date.now() - 7 * 60 * 1000);
+
+  const unpaidAppointments = await prisma.appointment.findMany({
+    where: {
+      createdAt: { lte: expireTime },
+      paymentStatus: PaymentStatus.UNPAID,
+    },
+  });
+
+  const appointmentIds = unpaidAppointments?.map(({ id }) => id) || [];
+
+  await prisma.$transaction(async (trx) => {
+    await trx.payment.deleteMany({
+      where: { appointmentId: { in: appointmentIds } },
+    });
+
+    await trx.appointment.deleteMany({
+      where: { id: { in: appointmentIds } },
+    });
+
+    await Promise.all(
+      unpaidAppointments.map((a) =>
+        trx.doctorSchedule.update({
+          where: {
+            doctorId_scheduleId: {
+              doctorId: a.doctorId,
+              scheduleId: a.scheduleId,
+            },
+          },
+          data: {
+            isBooked: false,
+          },
+        }),
+      ),
+    );
+  });
+};
+
 export default {
   createAppointment,
   getAllAppointments,
   getMyAppointments,
   updateAppointmentStatus,
+  cancelUnpaidAppointments,
 };
