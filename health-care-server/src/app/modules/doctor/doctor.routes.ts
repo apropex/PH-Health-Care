@@ -15,6 +15,8 @@ router.post(
 
 router.get("/", controllers.getAllDoctors);
 
+router.get("/:id", controllers.getDoctorById);
+
 router.patch("/:id", controllers.updateDoctor);
 
 router.post("/suggestion", controllers.getAISuggestion);

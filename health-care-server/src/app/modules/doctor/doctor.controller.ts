@@ -48,4 +48,19 @@ const getAISuggestion = catchAsync(async (req, res) => {
   });
 });
 
-export default { createDoctor, getAllDoctors, updateDoctor, getAISuggestion };
+const getDoctorById = catchAsync(async (req, res) => {
+  const result = await services.getDoctorById(req.params.id);
+
+  _response(res, {
+    message: "Doctor retrieved successfully",
+    data: result,
+  });
+});
+
+export default {
+  createDoctor,
+  getAllDoctors,
+  updateDoctor,
+  getAISuggestion,
+  getDoctorById,
+};

@@ -26,7 +26,8 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
     where: { email: user.email },
   }));
 
-  if (userExists) throw new Error("User already exists");
+  if (userExists)
+    throw new ApiError(httpStatus.CONFLICT, "User already exists");
 
   return await prisma.$transaction(async (trx) => {
     const createdUser = await trx.user.create({
@@ -90,6 +91,7 @@ const getAllDoctors = async (query: iQuery) => {
         specialties: true,
       },
     },
+    review: true,
   };
 
   const [doctors, total_data, filtered_data] = await Promise.all([
@@ -206,9 +208,29 @@ const getAISuggestion = async (payload: { symptoms: string }) => {
   return await openRouter(payload, doctors);
 };
 
+const getDoctorById = async (id: string) => {
+  return await prisma.doctor.findUniqueOrThrow({
+    where: { id, isDeleted: false },
+    include: {
+      doctorSpecialties: {
+        include: {
+          specialties: true,
+        },
+      },
+      doctorSchedules: {
+        include: {
+          schedule: true,
+        },
+      },
+      reviews: true,
+    },
+  });
+};
+
 export default {
   createDoctor,
   getAllDoctors,
   updateDoctor,
   getAISuggestion,
+  getDoctorById,
 };

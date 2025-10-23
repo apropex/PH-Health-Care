@@ -1,6 +1,8 @@
 //
 
 import { UserStatus } from "@prisma/client";
+import httpStatus from "http-status";
+import ApiError from "../../../error-handler/ApiError";
 import { compareHash } from "../../../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken } from "../../../utils/jwt";
 import { prisma } from "../../shared/prisma";
@@ -29,14 +31,16 @@ const login = async ({
     },
   });
 
-  if (!user) throw new Error("User does not exists");
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, "User does not exists");
   if (user.status === UserStatus.DELETED)
-    throw new Error("User account was deleted, contact to support");
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "User account was deleted, contact to support",
+    );
 
   const { password: hashedPass, patient, doctor, admin, ...rest } = user;
 
-  const isValidate = await compareHash(password, hashedPass);
-  if (!isValidate) throw new Error("Invalidate credentials");
+  await compareHash(password, hashedPass);
 
   let payload = {};
 

@@ -1,4 +1,6 @@
 import { Prisma } from "@prisma/client";
+import httpStatus from "http-status";
+import ApiError from "../../../error-handler/ApiError";
 import { buildHash } from "../../../utils/bcrypt";
 import { prisma } from "../../shared/prisma";
 
@@ -14,7 +16,8 @@ const createAdmin = async ({ admin, user }: iCreateAdmin) => {
     where: { email: user.email },
   }));
 
-  if (userExists) throw new Error("User already exists");
+  if (userExists)
+    throw new ApiError(httpStatus.CONFLICT, "User already exists");
 
   return await prisma.$transaction(async (trx) => {
     const createdUser = await trx.user.create({
