@@ -23,6 +23,7 @@ const fetchDashboardMetaData = async (decoded: JwtPayload) => {
     }
 
     case PATIENT: {
+      metadata = await getPatientMetadata(decoded.secondaryId);
       break;
     }
 
@@ -102,6 +103,11 @@ const getDoctorMetadata = async (doctorId: string) => {
     }),
   ]);
 
+  const totalPatients = result[1].map(({ patientId, _count }) => ({
+    patientId,
+    count: Number(_count.id),
+  }));
+
   const appointmentsByStatus = result[4].map(({ status, _count }) => ({
     status,
     count: Number(_count.id),
@@ -109,10 +115,35 @@ const getDoctorMetadata = async (doctorId: string) => {
 
   return {
     totalAppointments: result[0],
-    totalPatients: result[1],
+    totalPatients,
     totalReviews: result[2],
     totalRevenue: result[3],
     appointmentsByStatus,
+  };
+};
+
+const getPatientMetadata = async (patientId: string) => {
+  const result = await Promise.all([
+    prisma.appointment.count({ where: { patientId } }),
+    prisma.prescription.count({ where: { patientId } }),
+    prisma.review.count({ where: { patientId } }),
+    prisma.appointment.groupBy({
+      by: ["status"],
+      _count: { id: true },
+      where: { patientId },
+    }),
+  ]);
+
+  const appointmentsById = result[3].map(({ status, _count }) => ({
+    status,
+    count: Number(_count.id),
+  }));
+
+  return {
+    totalAppointments: result[0],
+    totalPrescriptions: result[1],
+    totalReviews: result[2],
+    appointmentsById,
   };
 };
 
