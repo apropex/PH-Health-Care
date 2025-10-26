@@ -8,8 +8,8 @@ import PublicNavLinks from "./PublicNavLinks";
 
 export default function PublicNavbar() {
   return (
-    <header className="w-full sticky top-4 px-4">
-      <nav className="w-full max-w-5xl mx-auto flex items-center justify-between bg-secondary/5 backdrop-blur rounded-full p-3 border">
+    <header className="w-full sticky top-4 px-4 z-50">
+      <nav className="sticky top-0 w-full max-w-5xl mx-auto flex items-center justify-between bg-secondary/5 backdrop-blur rounded-full p-3 border">
         {/* Left Side */}
         <div>
           <Link
