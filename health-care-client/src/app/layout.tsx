@@ -1,3 +1,8 @@
+import getUser from "@/helper/getUser";
+import { getCookie } from "@/hooks/getCookie";
+import { iChildren } from "@/interfaces";
+import { iUser } from "@/interfaces/user.interfaces";
+import { UserProvider } from "@/Providers/UserProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -17,14 +22,17 @@ export const metadata: Metadata = {
   description: "A doctor and patient consultation website",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: Readonly<iChildren>) {
+  let initialUser: iUser | null = null;
+
+  const { success, user } = await getUser(await getCookie());
+  if (success) initialUser = user;
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <UserProvider initialUser={initialUser}>{children}</UserProvider>
+      </body>
     </html>
   );
 }

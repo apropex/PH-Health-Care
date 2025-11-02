@@ -1,6 +1,8 @@
 "use client";
 
+import { UserRole } from "@/constants";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/Providers/UserProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,11 +16,33 @@ export const nav_links = [
 ];
 
 export default function PublicNavLinks() {
+  const { user } = useUser();
   const pathname = usePathname();
+  let roleBasedLinks = [...nav_links];
+
+  if (user) {
+    switch (user.role) {
+      case UserRole.ADMIN:
+        roleBasedLinks.push({ href: "/dashboard/admin", name: "Dashboard" });
+        break;
+
+      case UserRole.DOCTOR:
+        roleBasedLinks.push({ href: "/dashboard/doctor", name: "Dashboard" });
+        break;
+
+      case UserRole.PATIENT:
+        roleBasedLinks.push({ href: "/dashboard/patient", name: "Dashboard" });
+        break;
+
+      default:
+        roleBasedLinks = nav_links;
+        break;
+    }
+  }
 
   return (
     <div className="flex items-center flex-wrap text-sm text-muted-foreground">
-      {nav_links.map(({ href, name }) => (
+      {roleBasedLinks.map(({ href, name }) => (
         <Link
           href={href}
           key={href}

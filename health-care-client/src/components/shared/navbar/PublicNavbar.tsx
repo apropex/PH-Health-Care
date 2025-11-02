@@ -2,8 +2,8 @@
 
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../../ui/button";
 import { MobileMenuLinks } from "./MobileMenuLinks";
+import ProfileMenu from "./ProfileMenu";
 import PublicNavLinks from "./PublicNavLinks";
 
 export default function PublicNavbar() {
@@ -27,9 +27,7 @@ export default function PublicNavbar() {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-          <Link href={"/login"}>
-            <Button size={"responsive"}>Login</Button>
-          </Link>
+          <ProfileMenu />
 
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">

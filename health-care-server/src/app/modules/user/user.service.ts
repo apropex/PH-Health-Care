@@ -65,6 +65,7 @@ const getUserById = async (id: string) => {
   const user = (await prisma.user.findUniqueOrThrow({
     where: { id },
     include: { admin: true, patient: true, doctor: true },
+    omit: { password: true },
   })) as iUserProfile;
 
   if (user.status === UserStatus.DELETED) {

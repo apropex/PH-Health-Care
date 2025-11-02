@@ -25,9 +25,9 @@ const login = async ({
       status: true,
       createdAt: true,
       updatedAt: true,
-      doctor: { select: { id: true } },
-      admin: { select: { id: true } },
-      patient: { select: { id: true } },
+      doctor: true,
+      admin: true,
+      patient: true,
     },
   });
 
@@ -43,15 +43,25 @@ const login = async ({
   await compareHash(password, hashedPass);
 
   let payload = {};
+  let newUser = {};
 
-  if (patient) payload = { ...rest, secondaryId: patient.id };
-  if (doctor) payload = { ...rest, secondaryId: doctor.id };
-  if (admin) payload = { ...rest, secondaryId: admin.id };
+  if (patient) {
+    newUser = { ...rest, patient };
+    payload = { ...rest, secondaryId: patient.id };
+  }
+  if (doctor) {
+    newUser = { ...rest, doctor };
+    payload = { ...rest, secondaryId: doctor.id };
+  }
+  if (admin) {
+    newUser = { ...rest, admin };
+    payload = { ...rest, secondaryId: admin.id };
+  }
 
   const access_token = generateAccessToken(payload);
   const refresh_token = generateRefreshToken(payload);
 
-  return { user: rest, access_token, refresh_token };
+  return { user: newUser, access_token, refresh_token };
 };
 
 export default { login };

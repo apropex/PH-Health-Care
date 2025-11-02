@@ -9,4 +9,6 @@ router.post(
   controllers.login,
 );
 
+router.get("/refresh-token-verifier", controllers.getAccessTokenByRefreshToken);
+
 export default router;

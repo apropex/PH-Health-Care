@@ -12,9 +12,9 @@ const router = Router();
 
 router.get("/", controllers.getAllUsers);
 
-router.get("/:id", tokenVerifier, controllers.getUserById);
-
 router.get("/me", tokenVerifier, controllers.getMe);
+
+router.get("/:id", tokenVerifier, controllers.getUserById);
 
 router.post(
   "/:id/status",

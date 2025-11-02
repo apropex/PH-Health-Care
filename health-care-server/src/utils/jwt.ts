@@ -1,23 +1,23 @@
 import { User } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import _env from "../config";
+import ApiError from "../error-handler/ApiError";
+import sCode from "./statusCode";
 
-type UserPayload = Partial<User> & { secondaryId?: string };
+export type UserTokenPayload = Partial<User> & { secondaryId?: string };
 
 const payloadMaker = ({
   id,
   secondaryId,
   email,
-  password,
   role,
   needPasswordChange,
   status,
-}: UserPayload) => {
+}: UserTokenPayload) => {
   return {
     id,
     secondaryId,
     email,
-    password,
     role,
     needPasswordChange,
     status,
@@ -26,7 +26,7 @@ const payloadMaker = ({
 
 //* GENERATE ACCESS TOKEN
 export const generateAccessToken = (
-  userPayload: UserPayload,
+  userPayload: UserTokenPayload,
   { secretKey, period }: { secretKey?: string; period?: string } = {},
 ) => {
   //
@@ -39,14 +39,18 @@ export const generateAccessToken = (
 
   const access_token = jwt.sign(payload, secret, options);
 
-  if (!access_token) throw new Error("Failed to generate access token");
+  if (!access_token)
+    throw new ApiError(
+      sCode.EXPECTATION_FAILED,
+      "Failed to generate access token",
+    );
 
   return access_token;
 };
 
 //* GENERATE REFRESH TOKEN
 export const generateRefreshToken = (
-  userPayload: UserPayload,
+  userPayload: UserTokenPayload,
   { secretKey, period }: { secretKey?: string; period?: string } = {},
 ) => {
   //
@@ -59,7 +63,11 @@ export const generateRefreshToken = (
 
   const refresh_token = jwt.sign(payload, secret, options);
 
-  if (!refresh_token) throw new Error("Failed to generate refresh token");
+  if (!refresh_token)
+    throw new ApiError(
+      sCode.EXPECTATION_FAILED,
+      "Failed to generate refresh token",
+    );
 
   return refresh_token;
 };
@@ -70,7 +78,8 @@ export const verifyAccessToken = (token: string): jwt.JwtPayload => {
     token,
     _env.jwt.access_token_secret,
   ) as jwt.JwtPayload;
-  if (!accessToken) throw new Error("Token is not valid");
+  if (!accessToken)
+    throw new ApiError(sCode.UNAUTHORIZED, "Token is not valid");
   return accessToken;
 };
 
@@ -80,6 +89,7 @@ export const verifyRefreshToken = (token: string): jwt.JwtPayload => {
     token,
     _env.jwt.refresh_token_secret,
   ) as jwt.JwtPayload;
-  if (!refreshToken) throw new Error("Token is not valid");
+  if (!refreshToken)
+    throw new ApiError(sCode.UNAUTHORIZED, "Token is not valid");
   return refreshToken;
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/Providers/UserProvider";
 import {
   Sheet,
   SheetContent,
@@ -9,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { UserRole } from "@/constants";
 import { iChildren } from "@/interfaces";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -18,7 +20,29 @@ import { nav_links } from "./PublicNavLinks";
 
 export function MobileMenuLinks({ children }: iChildren) {
   const pathname = usePathname();
+  const { user } = useUser();
   const [open, setOpen] = useState<boolean>(false);
+  let roleBasedLinks = [...nav_links];
+
+  if (user) {
+    switch (user.role) {
+      case UserRole.ADMIN:
+        roleBasedLinks.push({ href: "/dashboard/admin", name: "Dashboard" });
+        break;
+
+      case UserRole.DOCTOR:
+        roleBasedLinks.push({ href: "/dashboard/doctor", name: "Dashboard" });
+        break;
+
+      case UserRole.PATIENT:
+        roleBasedLinks.push({ href: "/dashboard/patient", name: "Dashboard" });
+        break;
+
+      default:
+        roleBasedLinks = nav_links;
+        break;
+    }
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -29,7 +53,7 @@ export function MobileMenuLinks({ children }: iChildren) {
           <SheetDescription className="sr-only"></SheetDescription>
         </SheetHeader>
         <div className="flex flex-col flex-wrap px-3 text-sm text-muted-foreground">
-          {nav_links.map(({ href, name }) => (
+          {roleBasedLinks.map(({ href, name }) => (
             <Link
               href={href}
               key={href}

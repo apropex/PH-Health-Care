@@ -14,23 +14,19 @@ import userRoutes from "../modules/user/user.routes";
 
 const router = Router();
 
-const routesMaker = (dest: string, router: Router) => {
-  return { path: dest, route: router };
-};
-
 [
-  routesMaker("/user", userRoutes),
-  routesMaker("/auth", authRoutes),
-  routesMaker("/patient", patientRoutes),
-  routesMaker("/admin", adminRoutes),
-  routesMaker("/doctor", doctorRoutes),
-  routesMaker("/schedule", scheduleRoutes),
-  routesMaker("/doctor-schedule", doctorScheduleRoutes),
-  routesMaker("/specialties", specialtyRoutes),
-  routesMaker("/appointment", appointmentRoutes),
-  routesMaker("/prescription", prescriptionRoutes),
-  routesMaker("/review", reviewRoutes),
-  routesMaker("/meta-data", metaDataRoutes),
+  { path: "/user", route: userRoutes },
+  { path: "/auth", route: authRoutes },
+  { path: "/patient", route: patientRoutes },
+  { path: "/admin", route: adminRoutes },
+  { path: "/doctor", route: doctorRoutes },
+  { path: "/schedule", route: scheduleRoutes },
+  { path: "/doctor-schedule", route: doctorScheduleRoutes },
+  { path: "/specialties", route: specialtyRoutes },
+  { path: "/appointment", route: appointmentRoutes },
+  { path: "/prescription", route: prescriptionRoutes },
+  { path: "/review", route: reviewRoutes },
+  { path: "/meta-data", route: metaDataRoutes },
 
   //
 ].forEach(({ path, route }) => router.use(path, route));
