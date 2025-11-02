@@ -1,6 +1,7 @@
 "use client";
 
 import CustomButton from "@/components/buttons/CustomButton";
+import { ModeToggle } from "@/components/ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -95,14 +96,11 @@ export default function ProfileMenu() {
               <DropdownMenuItem>Team</DropdownMenuItem>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger className="rounded-xs">
-                  Invite users
+                  Theme
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem>Email</DropdownMenuItem>
-                    <DropdownMenuItem>Message</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>More...</DropdownMenuItem>
+                    <ModeToggle />
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>

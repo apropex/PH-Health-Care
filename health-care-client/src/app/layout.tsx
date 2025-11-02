@@ -2,6 +2,7 @@ import getUser from "@/helper/getUser";
 import { getCookie } from "@/hooks/getCookie";
 import { iChildren } from "@/interfaces";
 import { iUser } from "@/interfaces/user.interfaces";
+import { ThemeProvider } from "@/Providers/theme-provider";
 import { UserProvider } from "@/Providers/UserProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -29,9 +30,16 @@ export default async function RootLayout({ children }: Readonly<iChildren>) {
   if (success) initialUser = user;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <UserProvider initialUser={initialUser}>{children}</UserProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <UserProvider initialUser={initialUser}>{children}</UserProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
