@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: Readonly<iChildren>) {
     <QueryClientProvider client={queryClient}>
       <SidebarProvider>
         <AppSidebar />
-        <main>
+        <main className="px-4 w-full">
           <SidebarTrigger />
           {children}
         </main>

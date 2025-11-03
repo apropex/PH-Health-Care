@@ -1,8 +1,8 @@
 import { Gender } from "@prisma/client";
-import z from "zod";
+import z, { ZodObject } from "zod";
 import { defaultZodError } from "../../../helper/defaultZodError";
 
-export const CreateDoctorSchema = z.object({
+export const CreateDoctorSchema: ZodObject = z.object({
   user: z.object({
     email: z.string({ error: defaultZodError }),
     password: z.string({ error: defaultZodError }),
