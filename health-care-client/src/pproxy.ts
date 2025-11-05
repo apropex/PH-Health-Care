@@ -1,4 +1,4 @@
-// src/middleware.ts
+/*
 import { tUserRole, UserRole } from "@/constants";
 import { jwtDecode } from "jwt-decode";
 import { NextRequest, NextResponse } from "next/server";
@@ -110,3 +110,4 @@ export const config = {
     "/register",
   ],
 };
+*/
