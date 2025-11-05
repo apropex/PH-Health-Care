@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { isDev } from "../../config";
+import { deleteImageFromCloud } from "../../config/cloudinary/deleteImageFromCloud";
 import { ApiError } from "../../error-handler/ApiError";
 
 interface ErrorResponse {
@@ -40,12 +41,12 @@ const prismaErrorMap: Record<string, { statusCode: number; message: string }> =
     },
   };
 
-const globalErrorHandler = (
+const globalErrorHandler = async (
   err: unknown,
   req: Request,
   res: Response,
   next: NextFunction,
-): void => {
+): Promise<void> => {
   let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
   const errorResponse: ErrorResponse = {
     message: "Something went wrong!",
@@ -255,6 +256,14 @@ const globalErrorHandler = (
       method: req.method,
       code: errorResponse.error.code,
     });
+  }
+
+  if (req.file && req.file.path) await deleteImageFromCloud(req.file.path);
+
+  if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+    const imageUrls = req.files?.map((file) => file.path);
+
+    await Promise.all(imageUrls.map((url) => deleteImageFromCloud(url)));
   }
 
   res.status(statusCode).json({ success: false, ...errorResponse });

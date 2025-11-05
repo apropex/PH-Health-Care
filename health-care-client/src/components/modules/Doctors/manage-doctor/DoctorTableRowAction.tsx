@@ -4,22 +4,71 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { iDoctor } from "@/interfaces/user.interfaces";
 import { Row } from "@tanstack/react-table";
 import { EllipsisVertical } from "lucide-react";
-import { DoctorTableType } from "./doctorTable.type";
+import Link from "next/link";
 
-export default function RowActions({ row }: { row: Row<DoctorTableType> }) {
+export default function RowActions({ row }: { row: Row<iDoctor> }) {
   const doctor = row.original;
 
   return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="flex justify-end">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="shadow-none"
+            aria-label="Edit item"
+          >
+            <EllipsisVertical size={16} aria-hidden="true" />
+          </Button>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(doctor.id)}>
+            Copy doctor ID
+            <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/admin/manage-doctors/update-doctor/${doctor.id}`}>
+              <span>Edit</span>
+              <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            Share
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Add to favorites
+            <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="text-destructive focus:text-destructive">
+          <span>Delete</span>
+          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+//
+
+/*
+
+return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex justify-end">
@@ -79,4 +128,5 @@ export default function RowActions({ row }: { row: Row<DoctorTableType> }) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+
+*/

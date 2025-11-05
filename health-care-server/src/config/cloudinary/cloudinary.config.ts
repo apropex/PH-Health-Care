@@ -1,7 +1,5 @@
-import cloudinary from "cloudinary";
+import { v2 } from "cloudinary";
 import _env from "..";
-
-const { v2 } = cloudinary;
 
 v2.config({
   cloud_name: _env.cloudinary.cloud_name,
@@ -10,4 +8,4 @@ v2.config({
   secure: true,
 });
 
-export default v2;
+export const cloudinary = v2;

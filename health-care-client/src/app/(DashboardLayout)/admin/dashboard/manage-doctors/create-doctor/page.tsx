@@ -1,6 +1,6 @@
 //
 
-import CreateDoctorForm from "@/components/modules/Doctors/manage-doctor/CreateDoctorForm";
+import CreateDoctorForm from "@/components/forms/CreateDoctorForm";
 
 export default function CreateDoctorDashboard() {
   return (

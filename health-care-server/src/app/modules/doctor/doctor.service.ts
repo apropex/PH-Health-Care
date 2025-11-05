@@ -1,5 +1,6 @@
-import { Prisma } from "@prisma/client";
+import { Doctor, Prisma, User } from "@prisma/client";
 import httpStatus from "http-status";
+import { deleteImageFromCloud } from "../../../config/cloudinary/deleteImageFromCloud";
 import ApiError from "../../../error-handler/ApiError";
 import openRouter from "../../../helper/openRouter";
 import { buildHash } from "../../../utils/bcrypt";
@@ -91,7 +92,7 @@ const getAllDoctors = async (query: iQuery) => {
         specialties: true,
       },
     },
-    review: true,
+    reviews: true,
   };
 
   const [doctors, total_data, filtered_data] = await Promise.all([
@@ -119,12 +120,16 @@ const getAllDoctors = async (query: iQuery) => {
 received data
 
 {
-  "name": "Dr. Abdullah",
-  ...
+  "user": {},
+  "doctor": {},
   "specialties": [
       {
           "id": "specialty id",
           "isDelete": false
+      },
+      {
+          "id": "specialty id",
+          "isDelete": true
       }
   ]
 }
@@ -136,16 +141,24 @@ interface iSpecialties {
   isDeleted: boolean;
 }
 
-const updateDoctor = async (
-  id: string,
-  payload: Partial<Prisma.DoctorUpdateInput & { specialties: iSpecialties[] }>,
-) => {
-  //
-  await prisma.doctor.findFirstOrThrow({ where: { id } });
+interface iUpdateDoctor {
+  user: User;
+  doctor: Doctor;
+  specialties: iSpecialties[];
+}
 
-  const { specialties, ...doctorData } = payload;
+const updateDoctor = async (id: string, payload: iUpdateDoctor) => {
+  //
+  const { profilePhoto, user } = await prisma.doctor.findFirstOrThrow({
+    where: { id },
+    include: { user: { select: { id: true } } },
+  });
+
+  const { specialties, doctor: doctorData, user: userData } = payload;
 
   return await prisma.$transaction(async (trx) => {
+    //
+
     if (specialties && Array.isArray(specialties) && specialties.length) {
       const deleteSpecialties = specialties.filter(
         ({ isDeleted }) => isDeleted,
@@ -175,7 +188,12 @@ const updateDoctor = async (
       }
     }
 
-    return await trx.doctor.update({
+    await trx.user.update({
+      where: { id: user.id },
+      data: userData,
+    });
+
+    const updatedDoctor = await trx.doctor.update({
       where: { id },
       data: doctorData,
       include: {
@@ -186,6 +204,12 @@ const updateDoctor = async (
         },
       },
     });
+
+    if (doctorData.profilePhoto && profilePhoto) {
+      await deleteImageFromCloud(profilePhoto);
+    }
+
+    return updatedDoctor;
   });
 };
 

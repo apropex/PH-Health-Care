@@ -1,11 +1,12 @@
-import { Gender } from "@prisma/client";
+import { Gender, UserRole } from "@prisma/client";
 import z, { ZodObject } from "zod";
 import { defaultZodError } from "../../../helper/defaultZodError";
 
 export const CreateDoctorSchema: ZodObject = z.object({
   user: z.object({
     email: z.string({ error: defaultZodError }),
-    password: z.string({ error: defaultZodError }),
+    password: z.string({ error: defaultZodError }).optional(),
+    role: z.literal(UserRole.DOCTOR, { error: "User role must be DOCTOR" }),
   }),
   doctor: z.object({
     name: z.string({ error: defaultZodError }),

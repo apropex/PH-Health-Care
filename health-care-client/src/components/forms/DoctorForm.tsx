@@ -21,7 +21,7 @@ import {
 import { Gender } from "@/constants";
 import { useEffect, useState } from "react";
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
-import { DoctorFormSchemaType } from "../modules/Doctors/manage-doctor/doctorForm.schema";
+import { DoctorFormSchemaType } from "./form-validation/doctorForm.schema";
 
 interface iProps {
   form: UseFormReturn<DoctorFormSchemaType>;
@@ -39,14 +39,7 @@ export default function DoctorForm({ form, onSubmit }: iProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-4xl mx-auto mt-8 border rounded-2xl"
-      >
-        <h2 className="text-2xl md:text-4xl font-bold text-center my-4">Doctor-Form</h2>
-
-        <div className="border-t border-muted" />
-
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="p-5">
           <h3 className="text-xl text-primary mb-3">Doctor Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-8">

@@ -14,7 +14,6 @@ const createDoctor = catchAsync(async (req, res) => {
   }
 
   const result = await services.createDoctor(payload);
-
   _response(res, {
     message: "Doctor created successfully",
     data: result,
@@ -32,7 +31,16 @@ const getAllDoctors = catchAsync(async (req, res) => {
 });
 
 const updateDoctor = catchAsync(async (req, res) => {
-  const result = await services.updateDoctor(req.params.id, req.body);
+  const payload = req.body;
+
+  if (req.file) {
+    const uploadResult = await fileUploader(req.file);
+    if (uploadResult?.secure_url) {
+      payload.doctor.profilePhoto = uploadResult.secure_url;
+    }
+  }
+
+  const result = await services.updateDoctor(req.params.id, payload);
 
   _response(res, {
     message: "Doctor updated successfully",

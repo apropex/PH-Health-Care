@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import cloudinary from "../config/cloudinary/cloudinary.config";
+import { cloudinary } from "../config/cloudinary/cloudinary.config";
 
 /**
  * Uploads a file to Cloudinary with retry logic.

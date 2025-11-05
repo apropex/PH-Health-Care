@@ -34,101 +34,8 @@ import {
 import { ChevronDown, Plus } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
+import { useDoctor } from "./../../../../hooks/useDoctor";
 import { columns } from "./DoctorTableColumns";
-import { DoctorTableType } from "./doctorTable.type";
-
-const data: DoctorTableType[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-];
 
 export default function DoctorTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -140,8 +47,12 @@ export default function DoctorTable() {
     pageSize: 10,
   });
 
+  const { data } = useDoctor().getDoctors;
+
+  const doctors = data?.data;
+
   const table = useReactTable({
-    data,
+    data: doctors || [],
     columns: columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -162,10 +73,6 @@ export default function DoctorTable() {
 
     // manualPagination: false,
   });
-
-  React.useEffect(() => {
-    table.setPageSize(pagination.pageSize);
-  }, [pagination.pageSize, table]);
 
   return (
     <div className="w-full">
