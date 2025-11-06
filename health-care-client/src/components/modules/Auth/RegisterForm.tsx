@@ -1,15 +1,24 @@
 "use client";
 
-import LoadingButton from "@/components/buttons/LodingButton";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import LoadingButton from "@/components/buttons/LoadingButton";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
-import { useState } from "react";
+import { registerPatient } from "@/services/auth/registerPatient";
+import { getZodError } from "@/utility/zodValidatorFn";
+import { useActionState } from "react";
 
 export default function RegisterForm() {
-  const [loading, setLoading] = useState(false);
+  const [state, formAction, isPending] = useActionState(registerPatient, null);
+
   return (
-    <form>
+    <form action={formAction}>
       <FieldGroup>
         <FieldSet>
           <FieldGroup>
@@ -22,6 +31,11 @@ export default function RegisterForm() {
                 placeholder="Evil Rabbit"
                 required
               />
+              {getZodError(state, "name") && (
+                <FieldDescription className="text-destructive">
+                  {getZodError(state, "name")}
+                </FieldDescription>
+              )}
             </Field>
             <Field>
               <FieldLabel htmlFor="address">Address</FieldLabel>
@@ -42,10 +56,20 @@ export default function RegisterForm() {
                 placeholder="rabbit@example.com"
                 required
               />
+              {getZodError(state, "email") && (
+                <FieldDescription className="text-destructive">
+                  {getZodError(state, "email")}
+                </FieldDescription>
+              )}
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Password id="password" name="password" placeholder="********" required />
+              {getZodError(state, "password") && (
+                <FieldDescription className="text-destructive">
+                  {getZodError(state, "password")}
+                </FieldDescription>
+              )}
             </Field>
             <Field>
               <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
@@ -55,13 +79,22 @@ export default function RegisterForm() {
                 placeholder="••••••••"
                 required
               />
+              {getZodError(state, "confirmPassword") && (
+                <FieldDescription className="text-destructive">
+                  {getZodError(state, "confirmPassword")}
+                </FieldDescription>
+              )}
             </Field>
           </FieldGroup>
         </FieldSet>
 
         {/* <FieldSeparator /> */}
         <Field orientation="vertical">
-          <LoadingButton isLoading={loading} disabled={loading} loadingText="Creating...">
+          <LoadingButton
+            isLoading={isPending}
+            disabled={isPending}
+            loadingText="Creating..."
+          >
             Create Account
           </LoadingButton>
         </Field>

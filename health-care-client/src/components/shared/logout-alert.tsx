@@ -6,7 +6,7 @@ import { useUser } from "@/Providers/UserProvider";
 import { LogOutIcon, ShieldAlert, XIcon } from "lucide-react";
 import { useState } from "react";
 import CustomButton from "../buttons/CustomButton";
-import LoadingButton from "../buttons/LodingButton";
+import LoadingButton from "../buttons/LoadingButton";
 
 export default function Logout({ children }: iChildren) {
   const [open, setOpen] = useState(false);
