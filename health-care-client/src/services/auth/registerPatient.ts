@@ -2,8 +2,10 @@
 "use server";
 
 import mergeApi from "@/utility/merge-api";
+import parseJSONbody from "@/utility/parseJSONbody";
 import { zodValidatorFn } from "@/utility/zodValidatorFn";
 import z from "zod";
+import { login } from "./login";
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/;
 
@@ -52,10 +54,16 @@ export const registerPatient = async (_: any, formData: FormData) => {
     const newFormData = new FormData();
     newFormData.append("data", JSON.stringify(registerData));
 
-    return await fetch(mergeApi("/patient/create-patient"), {
+    const response = await fetch(mergeApi("/patient/create-patient"), {
       method: "POST",
       body: newFormData,
-    }).then((res) => res.json());
+    });
+
+    const { success, message } = await parseJSONbody<null>(response);
+
+    if (!success) return { success: false, message };
+
+    return await login(null, formData);
 
     //
   } catch (error: any) {

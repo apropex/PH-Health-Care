@@ -1,6 +1,5 @@
 //
 
-import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { MobileMenuLinks } from "./MobileMenuLinks";
 import ProfileMenu from "./ProfileMenu";
@@ -31,11 +30,7 @@ export default function PublicNavbar() {
 
           {/* Mobile Menu */}
           <div className="md:hidden flex items-center">
-            <MobileMenuLinks>
-              <button>
-                <MenuIcon size={20} />
-              </button>
-            </MobileMenuLinks>
+            <MobileMenuLinks />
           </div>
         </div>
       </nav>

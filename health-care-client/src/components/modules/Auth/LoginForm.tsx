@@ -15,11 +15,13 @@ import { getZodError } from "@/utility/zodValidatorFn";
 import Link from "next/link";
 import { useActionState } from "react";
 
-export default function LoginForm() {
+export default function LoginForm({ redirect }: { redirect?: string }) {
   const [state, action, isPending] = useActionState(login, null);
 
   return (
     <form action={action}>
+      {redirect && <input type="hidden" name="redirect" value={redirect} />}
+
       <FieldGroup>
         <FieldSet>
           <FieldGroup>
@@ -29,10 +31,10 @@ export default function LoginForm() {
                 id="email"
                 name="email"
                 type="email"
+                defaultValue={"admin@gmail.com"}
                 placeholder="rabbit@example.com"
                 required
               />
-
               {getZodError(state, "email") && (
                 <FieldDescription className="text-destructive">
                   {getZodError(state, "email")}
@@ -47,8 +49,12 @@ export default function LoginForm() {
                   Forgot your password?
                 </Link>
               </div>
-              <Password id="password" name="password" placeholder="••••••••" required />
-
+              <Password
+                id="password"
+                name="password"
+                defaultValue={"Z/x32165"}
+                required
+              />
               {getZodError(state, "password") && (
                 <FieldDescription className="text-destructive">
                   {getZodError(state, "password")}

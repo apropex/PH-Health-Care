@@ -1,6 +1,6 @@
 //
 
-import { isDev } from "../config";
+import { isProd } from "../config";
 
 /**
  * Environment Variable Checker Utility
@@ -31,7 +31,7 @@ export function envChecker<T extends Record<string, any>>(
   });
 
   // Optional: Success message in non-production environments
-  if (isDev && !parentKey) {
+  if (!isProd && !parentKey) {
     console.log(
       "✅ All required environment variables are loaded successfully.",
     );

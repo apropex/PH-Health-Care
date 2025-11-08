@@ -1,15 +1,9 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Star } from "lucide-react";
+import CustomButton from "@/components/buttons/CustomButton";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { BookPlus, Star, User } from "lucide-react";
 import Image from "next/image";
 import cardioDoc from "../../../assets/images/doctor-cardiologist.jpg";
-import neurolDoc from "../../../assets/images/doctor-neurologist.jpg";
+import neuralDoc from "../../../assets/images/doctor-neurologist.jpg";
 import orthoDoc from "../../../assets/images/doctor-orthopedic.jpg";
 
 const doctors = [
@@ -25,7 +19,7 @@ const doctors = [
     specialty: "Neurologist",
     rating: 4.8,
     reviews: 45,
-    image: neurolDoc,
+    image: neuralDoc,
   },
   {
     name: "Dr. Robert Fox",
@@ -39,16 +33,16 @@ const doctors = [
 const DoctorCard = ({ doctor }: { doctor: (typeof doctors)[0] }) => {
   return (
     <Card className="text-center overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <CardHeader className="bg-blue-50/50 items-center p-6">
-        <Image
-          src={doctor.image}
-          alt={doctor.name}
-          width={96}
-          height={96}
-          className="rounded-full border-4 border-white shadow-md"
-        />
-      </CardHeader>
       <CardContent className="p-6">
+        <div className="flex justify-center mb-5">
+          <Image
+            src={doctor.image}
+            alt={doctor.name}
+            width={96}
+            height={96}
+            className="rounded-full border-4 border-white shadow-md"
+          />
+        </div>
         <CardTitle className="text-lg">{doctor.name}</CardTitle>
         <p className="text-primary font-medium mt-1">{doctor.specialty}</p>
         <div className="flex items-center justify-center my-3 text-sm">
@@ -58,8 +52,12 @@ const DoctorCard = ({ doctor }: { doctor: (typeof doctors)[0] }) => {
         </div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-2 p-4 pt-0">
-        <Button variant="outline">View Profile</Button>
-        <Button>Book Now</Button>
+        <CustomButton size={"sm"} variant="outline" icon={User}>
+          View Profile
+        </CustomButton>
+        <CustomButton size={"sm"} icon={BookPlus}>
+          Book Now
+        </CustomButton>
       </CardFooter>
     </Card>
   );
@@ -67,11 +65,11 @@ const DoctorCard = ({ doctor }: { doctor: (typeof doctors)[0] }) => {
 
 export default function TopRatedDoctors() {
   return (
-    <section className="bg-blue-50/50 py-24">
+    <section className="bg-blue-50/30 py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto">
+        <div className="text-center max-w-md mx-auto">
           <h2 className="text-3xl font-bold text-foreground">Our Top Rated Doctor</h2>
-          <p className="text-muted-foreground mt-4">
+          <p className="text-muted-foreground/70 mt-4">
             Access to medical experts from various specialties, ready to provide you with
             top-notch medical services.
           </p>
@@ -84,7 +82,7 @@ export default function TopRatedDoctors() {
         </div>
 
         <div className="text-center mt-12">
-          <Button size="lg">View All Doctors</Button>
+          <CustomButton size="lg">View All Doctors</CustomButton>
         </div>
       </div>
     </section>

@@ -62,5 +62,5 @@ envChecker(_env);
 
 //
 
-export const isDev = _env.node_env === "development";
+export const isProd = _env.node_env === "production";
 export default _env;

@@ -23,15 +23,15 @@ export default function PublicNavLinks() {
   if (user) {
     switch (user.role) {
       case UserRole.ADMIN:
-        roleBasedLinks.push({ href: "/dashboard/admin", name: "Dashboard" });
+        roleBasedLinks.push({ href: "/admin/dashboard", name: "Dashboard" });
         break;
 
       case UserRole.DOCTOR:
-        roleBasedLinks.push({ href: "/dashboard/doctor", name: "Dashboard" });
+        roleBasedLinks.push({ href: "/doctor/dashboard", name: "Dashboard" });
         break;
 
       case UserRole.PATIENT:
-        roleBasedLinks.push({ href: "/dashboard/patient", name: "Dashboard" });
+        roleBasedLinks.push({ href: "/dashboard", name: "Dashboard" });
         break;
 
       default:

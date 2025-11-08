@@ -64,7 +64,7 @@ export default function RegisterForm() {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Password id="password" name="password" placeholder="********" required />
+              <Password id="password" name="password" required />
               {getZodError(state, "password") && (
                 <FieldDescription className="text-destructive">
                   {getZodError(state, "password")}
@@ -73,12 +73,7 @@ export default function RegisterForm() {
             </Field>
             <Field>
               <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
-              <Password
-                id="confirmPassword"
-                name="confirmPassword"
-                placeholder="••••••••"
-                required
-              />
+              <Password id="confirmPassword" name="confirmPassword" required />
               {getZodError(state, "confirmPassword") && (
                 <FieldDescription className="text-destructive">
                   {getZodError(state, "confirmPassword")}

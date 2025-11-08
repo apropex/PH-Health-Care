@@ -6,25 +6,25 @@ const specialists = [
   {
     name: "Cardiology",
     icon: HeartPulse,
-    bgColor: "bg-red-100",
+    bgColor: "hover:bg-red-100",
     iconColor: "text-red-500",
   },
   {
     name: "Neurology",
     icon: Brain,
-    bgColor: "bg-blue-100",
+    bgColor: "hover:bg-blue-100",
     iconColor: "text-blue-500",
   },
   {
     name: "Orthopedic",
     icon: Bone,
-    bgColor: "bg-pink-100",
+    bgColor: "hover:bg-pink-100",
     iconColor: "text-pink-500",
   },
   {
     name: "Pediatric",
     icon: Baby,
-    bgColor: "bg-green-100",
+    bgColor: "hover:bg-green-100",
     iconColor: "text-green-500",
   },
 ];
@@ -32,7 +32,7 @@ const specialists = [
 export default function Specialties() {
   return (
     <section className="py-24 mt-24 md:mt-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 ">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
             <h2 className="text-3xl font-bold text-foreground">Our Specialist</h2>
@@ -50,7 +50,8 @@ export default function Specialties() {
             <Card
               key={specialist.name}
               className={cn(
-                "text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:bg-primary hover:text-primary-foreground"
+                "text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:bg-primary/10",
+                specialist.bgColor
               )}
             >
               <CardContent className="p-6">

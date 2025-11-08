@@ -11,14 +11,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { UserRole } from "@/constants";
-import { iChildren } from "@/interfaces";
 import { cn } from "@/lib/utils";
+import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { nav_links } from "./PublicNavLinks";
 
-export function MobileMenuLinks({ children }: iChildren) {
+export function MobileMenuLinks() {
   const pathname = usePathname();
   const { user } = useUser();
   const [open, setOpen] = useState<boolean>(false);
@@ -27,15 +27,15 @@ export function MobileMenuLinks({ children }: iChildren) {
   if (user) {
     switch (user.role) {
       case UserRole.ADMIN:
-        roleBasedLinks.push({ href: "/dashboard/admin", name: "Dashboard" });
+        roleBasedLinks.push({ href: "/admin/dashboard", name: "Dashboard" });
         break;
 
       case UserRole.DOCTOR:
-        roleBasedLinks.push({ href: "/dashboard/doctor", name: "Dashboard" });
+        roleBasedLinks.push({ href: "/doctor/dashboard", name: "Dashboard" });
         break;
 
       case UserRole.PATIENT:
-        roleBasedLinks.push({ href: "/dashboard/patient", name: "Dashboard" });
+        roleBasedLinks.push({ href: "/dashboard", name: "Dashboard" });
         break;
 
       default:
@@ -46,7 +46,12 @@ export function MobileMenuLinks({ children }: iChildren) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>{children}</SheetTrigger>
+      <SheetTrigger asChild>
+        <button>
+          <MenuIcon size={20} />
+        </button>
+      </SheetTrigger>
+
       <SheetContent>
         <SheetHeader>
           <SheetTitle className="text-primary text-xl">PH-Health-Care</SheetTitle>

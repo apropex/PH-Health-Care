@@ -1,10 +1,10 @@
 import { Response } from "express";
-import { isDev } from "../config";
+import { isProd } from "../config";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: !isDev,
-  sameSite: !isDev ? ("none" as const) : ("lax" as const),
+  secure: isProd,
+  sameSite: "none" as const,
 };
 
 export const setCookie = {

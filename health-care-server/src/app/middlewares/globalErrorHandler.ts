@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import { isDev } from "../../config";
+import { isProd } from "../../config";
 import { deleteImageFromCloud } from "../../config/cloudinary/deleteImageFromCloud";
 import { ApiError } from "../../error-handler/ApiError";
 
@@ -242,13 +242,13 @@ const globalErrorHandler = async (
   // ================================
   // PRODUCTION SAFETY + LOGGING
   // ================================
-  if (!isDev && err instanceof Error) {
+  if (isProd && err instanceof Error) {
     delete errorResponse.stack; // Production: Hide stack trace
-  } else if (isDev && (err instanceof Error || err instanceof ApiError)) {
+  } else if (!isProd && (err instanceof Error || err instanceof ApiError)) {
     errorResponse.stack = err.stack; // Development: Show stack trace
   }
 
-  if (isDev && (err instanceof Error || err instanceof ApiError)) {
+  if (!isProd && (err instanceof Error || err instanceof ApiError)) {
     console.error("🚨 [ERROR]", {
       statusCode,
       message: errorResponse.message,

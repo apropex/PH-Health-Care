@@ -1,19 +1,18 @@
-/*
 import { tUserRole, UserRole } from "@/constants";
 import { jwtDecode } from "jwt-decode";
 import { NextRequest, NextResponse } from "next/server";
 import { iUser } from "./interfaces/user.interfaces";
-import { redirectToLogin } from "./middleware/utils/cookie-utils";
-import { handleRefreshToken } from "./middleware/utils/refresh-token";
+import { redirectToLogin } from "./proxy-utils/cookie-utils";
+import { handleRefreshToken } from "./proxy-utils/refresh-token";
 
 const auth_routes = ["/login", "/register"];
-const UNAUTHORIZED_ROUTE = "/unauthorized";
+const unauthorized_route = "/unauthorized";
 
 // Role-based route mapping
 const ROLE_ROUTES = {
-  ADMIN: [/^\/dashboard\/admin(\/|$)/],
-  DOCTOR: [/^\/dashboard\/doctor(\/|$)/],
-  PATIENT: [/^\/dashboard\/patient(\/|$)/],
+  ADMIN: [/^\/admin(\/|$)/],
+  DOCTOR: [/^\/doctor(\/|$)/],
+  PATIENT: [/^\/patient(\/|$)/],
 } as const;
 
 export async function proxy(request: NextRequest) {
@@ -72,7 +71,7 @@ export async function proxy(request: NextRequest) {
   const role = user.role as tUserRole;
 
   if (!role || !ROLE_ROUTES[role]) {
-    return NextResponse.redirect(new URL(UNAUTHORIZED_ROUTE, request.url));
+    return NextResponse.redirect(new URL(unauthorized_route, request.url));
   }
 
   if (pathname === "/dashboard") {
@@ -87,16 +86,16 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard/patient", request.url));
 
       default:
-        return NextResponse.redirect(new URL(UNAUTHORIZED_ROUTE, request.url));
+        return NextResponse.redirect(new URL(unauthorized_route, request.url));
     }
   }
 
   const isAllowed = ROLE_ROUTES[role].some((regex) => regex.test(pathname));
   if (!isAllowed) {
-    return NextResponse.redirect(new URL(UNAUTHORIZED_ROUTE, request.url));
+    return NextResponse.redirect(new URL(unauthorized_route, request.url));
   }
 
-  // 7. All good → proceed
+  // All good → proceed
   return NextResponse.next();
 }
 
@@ -110,4 +109,3 @@ export const config = {
     "/register",
   ],
 };
-*/

@@ -7,7 +7,7 @@ export interface iChildren {
 
 export interface iResponse<T> {
   statusCode?: number;
-  success?: boolean;
+  success: boolean;
   message: string;
   meta?: {
     total_data?: number;

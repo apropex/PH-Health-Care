@@ -15,11 +15,11 @@ const createPatient = catchAsync(async (req, res) => {
     }
   }
 
-  const result = await services.createPatient(payload);
+  await services.createPatient(payload);
 
   _response(res, {
     message: "Patient created successfully",
-    data: result,
+    data: null,
   });
 });
 
