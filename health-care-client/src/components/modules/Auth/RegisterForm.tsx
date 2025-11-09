@@ -14,14 +14,16 @@ import { registerPatient } from "@/services/auth/registerPatient";
 import { getZodError } from "@/utility/zodValidatorFn";
 import { useActionState } from "react";
 
-export default function RegisterForm() {
+export default function RegisterForm({ redirect }: { redirect?: string }) {
   const [state, formAction, isPending] = useActionState(registerPatient, null);
 
   return (
     <form action={formAction}>
+      {redirect && <input type="hidden" name="redirect" value={redirect} />}
+
       <FieldGroup>
         <FieldSet>
-          <FieldGroup>
+          <FieldGroup className="grid grid-cols-1 md:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
               <Input
@@ -38,16 +40,6 @@ export default function RegisterForm() {
               )}
             </Field>
             <Field>
-              <FieldLabel htmlFor="address">Address</FieldLabel>
-              <Input
-                id="address"
-                name="address"
-                type="text"
-                placeholder="City, Town, Area..."
-                required
-              />
-            </Field>
-            <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input
                 id="email"
@@ -61,6 +53,16 @@ export default function RegisterForm() {
                   {getZodError(state, "email")}
                 </FieldDescription>
               )}
+            </Field>
+            <Field className="md:col-span-2">
+              <FieldLabel htmlFor="address">Address</FieldLabel>
+              <Input
+                id="address"
+                name="address"
+                type="text"
+                placeholder="City, Town, Area..."
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>

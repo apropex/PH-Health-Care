@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { tUserRole } from "./constants";
 import { checkToken } from "./proxy-utils/check-token";
+import { deleteCookie, getCookie } from "./proxy-utils/cookie";
 import {
   getDefaultDashboardRoute,
   getRouteOwner,
@@ -15,9 +15,11 @@ export default async function proxy(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
   loginUrl.searchParams.set("redirect", pathname);
 
-  const cookieStore = await cookies();
-  const accessToken = request.cookies.get("accessToken")?.value ?? null;
-  const refreshToken = request.cookies.get("refreshToken")?.value ?? null;
+  // const accessToken = request.cookies.get("accessToken")?.value ?? null;
+  // const refreshToken = request.cookies.get("refreshToken")?.value ?? null;
+
+  const accessToken = (await getCookie("accessToken")) || null;
+  const refreshToken = (await getCookie("refreshToken")) || null;
 
   let userRole: tUserRole | null = null;
 
@@ -27,7 +29,7 @@ export default async function proxy(request: NextRequest) {
     if (decoded?.role) {
       userRole = decoded.role as tUserRole;
     } else {
-      cookieStore.delete("accessToken");
+      await deleteCookie("accessToken");
     }
   }
 
@@ -66,8 +68,8 @@ export default async function proxy(request: NextRequest) {
 //
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-    //"/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.well-known).*)"
+    // "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.well-known).*)",
   ],
 };
 

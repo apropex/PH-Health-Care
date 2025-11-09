@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { deleteCookie } from "./cookie";
 
 export const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 export const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -19,10 +19,9 @@ export const checkToken = async (
     if (typeof decoded === "string") return null;
     return decoded as JwtPayload;
   } catch (error: any) {
-    const cookieStore = await cookies();
     if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
-      cookieStore.delete("accessToken");
-      if (secret === "refresh") cookieStore.delete("refreshToken");
+      await deleteCookie("accessToken");
+      if (secret === "refresh") await deleteCookie("refreshToken");
     }
     return null;
   }

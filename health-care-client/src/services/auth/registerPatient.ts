@@ -67,6 +67,7 @@ export const registerPatient = async (_: any, formData: FormData) => {
 
     //
   } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
     return {
       message: error?.message || "Patient registration failed",
       error,

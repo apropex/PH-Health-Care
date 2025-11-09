@@ -1,5 +1,5 @@
 import { parse } from "cookie";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 // === Constants ===
 const CookieOptions = {
@@ -13,6 +13,11 @@ const CookieOptions = {
 
 const threeDays = 1000 * 60 * 60 * 24 * 3;
 const thirtyDays = 1000 * 60 * 60 * 24 * 30;
+
+/*
+ * The `refresh` parameter (default: `true`) controls whether a refresh token is required
+ * in the response. When `refresh = false`, the function skips validation for the refresh
+ */
 
 export const setCookies = async (response: Response, refresh = true) => {
   const setCookieHeaders = response.headers.getSetCookie();
@@ -60,3 +65,20 @@ export const setCookies = async (response: Response, refresh = true) => {
 
   return { success: true, accessToken, refreshToken };
 };
+
+export async function getCookie(key?: "accessToken" | "refreshToken"): Promise<string> {
+  if (!key) return (await headers()).get("cookie") ?? "";
+  return (await cookies())?.get(key)?.value ?? "";
+}
+
+type Key = "accessToken" | "refreshToken" | "all";
+
+export async function deleteCookie(key: Key): Promise<void> {
+  const cookieStore = await cookies();
+
+  if (key === "all") {
+    cookieStore.getAll().forEach((c) => cookieStore.delete(c.name));
+    return;
+  }
+  cookieStore.delete(key);
+}

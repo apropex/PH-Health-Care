@@ -4,12 +4,13 @@
 import { tUserRole } from "@/constants";
 import { iUser } from "@/interfaces/user.interfaces";
 import { checkToken } from "@/proxy-utils/check-token";
+import { setCookies } from "@/proxy-utils/cookie";
 import {
   getDefaultDashboardRoute,
   isValidRedirectPath,
 } from "@/proxy-utils/proxy-helper";
-import { setCookies } from "@/proxy-utils/setCookie";
 import mergeApi from "@/utility/merge-api";
+import parseJSONbody from "@/utility/parseJSONbody";
 import { iZodValidatorReturns, zodValidatorFn } from "@/utility/zodValidatorFn";
 import { redirect } from "next/navigation";
 import z from "zod";
@@ -50,6 +51,10 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
       body: JSON.stringify({ email, password }),
     });
 
+    const result = await parseJSONbody<iUser>(response);
+
+    if (!result.success) throw new Error(result.message || "Login failed");
+
     const { success: tokenSuccess, accessToken } = await setCookies(response);
 
     if (!tokenSuccess || !accessToken)
@@ -65,16 +70,18 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
       redirectPath = role ? getDefaultDashboardRoute(role) : "/";
     }
 
-    redirect(redirectPath);
+    console.log({ redirectPath });
 
-    // const body = await parseJSONbody<iUser>(response);
+    redirect(redirectPath);
   } catch (error: any) {
-    console.error("Login error:", error);
     if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
-    return {
-      success: false,
-      message: error?.message || "An unexpected error occurred during login",
-      user: null,
-    };
+    else {
+      console.error("Login error:", error);
+      return {
+        success: false,
+        message: error?.message || "An unexpected error occurred during login",
+        user: null,
+      };
+    }
   }
 };
