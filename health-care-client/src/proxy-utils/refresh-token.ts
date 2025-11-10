@@ -1,4 +1,5 @@
 // middleware/utils/refresh-token.ts
+
 import { tUserRole } from "@/constants";
 import { iUser } from "@/interfaces/user.interfaces";
 import mergeApi from "@/utility/merge-api";

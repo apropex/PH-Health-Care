@@ -2,6 +2,7 @@
 
 import heroImgDark from "@/assets/images/hero-dark.jpg";
 import heroImgLight from "@/assets/images/hero-light.jpg";
+import CustomButton from "@/components/buttons/CustomButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,14 +19,14 @@ export default function Hero() {
         width={1000}
         height={0}
         alt="Hero Background Image for light mode"
-        className="object-cover absolute w-full h-auto dark:hidden blur-xs"
+        className="object-cover absolute w-full h-full dark:hidden blur-xs"
       />
       <Image
         src={heroImgDark}
         width={1000}
         height={0}
         alt="Hero Background Image for dark mode"
-        className="object-cover absolute w-full h-auto hidden dark:block"
+        className="object-cover absolute w-full h-full hidden dark:block blur-xs opacity-50"
       />
       <div className="relative container mx-auto pt-40 px-4 flex flex-col md:flex-row items-center justify-between gap-10 md:gap-3">
         {/* Left Side */}
@@ -42,8 +43,9 @@ export default function Hero() {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
-            Find Your Perfect <br /> Doctor with <span className="text-primary">AI</span>
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+            Find Your Perfect <br className="hidden md:block" /> Doctor with{" "}
+            <span className="text-primary">AI</span>
           </h1>
 
           <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-lg">
@@ -52,12 +54,12 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-4 mb-10">
-            <Button>
-              <SearchIcon /> Find Your Doctor
-            </Button>
-            <Button variant="outline">
-              <CalendarIcon /> Book Appointment
-            </Button>
+            <CustomButton icon={SearchIcon} textClass="mt-0.5">
+              Find Your Doctor
+            </CustomButton>
+            <CustomButton variant="outline" icon={CalendarIcon} textClass="mt-0.5">
+              Book Appointment
+            </CustomButton>
           </div>
 
           {/* Stats */}
@@ -85,7 +87,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex-1 w-full max-w-lg"
         >
-          <Card className="shadow-[8px_8px_20px_rgba(0,0,0,0.2)] bg-background border">
+          <Card className="shadow-[8px_8px_20px_rgba(0,0,0,0.2)] bg-background dark:bg-background/15 border backdrop-blur">
             <CardContent className="p-8 space-y-5">
               <h3 className="text-xl font-semibold text-foreground mb-3">
                 AI Doctor Finder
@@ -111,7 +113,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <div className="relative h-12 md:h-20 mt-5 w-full bg-linear-to-t from-background to-transparent" />
+      <div className="relative h-12 md:h-20 mt-20 w-full bg-linear-to-t from-background to-transparent" />
     </div>
   );
 }

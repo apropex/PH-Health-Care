@@ -6,25 +6,29 @@ const specialists = [
   {
     name: "Cardiology",
     icon: HeartPulse,
-    bgColor: "hover:bg-red-100",
+    styles:
+      "hover:bg-red-100 dark:hover:bg-red-500/30 hover:bg-linear-to-br from-red-800/40 to-card dark:shadow-[5px_10px_9px_rgba(255,0,0,0.1)] dark:hover:shadow-none",
     iconColor: "text-red-500",
   },
   {
     name: "Neurology",
     icon: Brain,
-    bgColor: "hover:bg-blue-100",
+    styles:
+      "hover:bg-blue-100 dark:hover:bg-blue-200/30 hover:bg-linear-to-br from-blue-800/40 to-card dark:shadow-[5px_10px_9px_rgba(0,0,255,0.1)] dark:hover:shadow-none",
     iconColor: "text-blue-500",
   },
   {
     name: "Orthopedic",
     icon: Bone,
-    bgColor: "hover:bg-pink-100",
+    styles:
+      "hover:bg-pink-100 dark:hover:bg-pink-200/30 hover:bg-linear-to-br from-pink-800/40 to-card dark:shadow-[5px_10px_9px_rgba(255,0,220,0.1)] dark:hover:shadow-none",
     iconColor: "text-pink-500",
   },
   {
     name: "Pediatric",
     icon: Baby,
-    bgColor: "hover:bg-green-100",
+    styles:
+      "hover:bg-green-100 dark:hover:bg-green-200/30 hover:bg-linear-to-br from-green-800/40 to-card dark:shadow-[5px_10px_9px_rgba(0,255,0,0.1)] dark:hover:shadow-none",
     iconColor: "text-green-500",
   },
 ];
@@ -40,7 +44,10 @@ export default function Specialties() {
               Access to medical experts across all major specialties.
             </p>
           </div>
-          <a href="#" className="text-primary font-semibold hover:underline mt-4 sm:mt-0">
+          <a
+            href="#"
+            className="self-end sm:self-center text-primary font-semibold hover:underline mt-4 sm:mt-0"
+          >
             View All
           </a>
         </div>
@@ -50,8 +57,8 @@ export default function Specialties() {
             <Card
               key={specialist.name}
               className={cn(
-                "text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:bg-primary/10",
-                specialist.bgColor
+                "text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1 shadow-[6px_12px_9px_rgba(0,0,0,0.3)]",
+                specialist.styles
               )}
             >
               <CardContent className="p-6">

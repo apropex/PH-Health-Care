@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { iChildren } from "@/interfaces";
 import { useUser } from "@/Providers/UserProvider";
-import { deleteCookie } from "@/proxy-utils/cookie";
 import { LogOutIcon, ShieldAlert, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,12 +21,18 @@ export default function Logout({ children }: iChildren) {
     // "use client";
     try {
       setLoading(true);
-      await deleteCookie("all", false);
-      toast.success("Logged out successfully!");
-      setOpen(false);
-      setUser(null);
-      router.push("/login");
-    } catch {
+      const result = await fetch("/api/logout", { method: "DELETE" }).then((res) =>
+        res.json()
+      );
+
+      if (result.success) {
+        toast.success("Logged out successfully!");
+        setOpen(false);
+        setUser(null);
+        router.push("/login");
+      } else toast.error(result.message || "User logged out failed");
+    } catch (error: any) {
+      toast.error(error.message || "User logged out failed");
     } finally {
       setLoading(false);
     }

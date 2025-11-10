@@ -2,11 +2,10 @@ import AppSidebar from "@/components/dashboard/AppSidebar";
 import SidebarNavbar from "@/components/dashboard/SidebarNavbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { iChildren } from "@/interfaces";
-import { cookies } from "next/headers";
+import { getCookie } from "@/proxy-utils/cookie";
 
 export default async function DashboardLayout({ children }: Readonly<iChildren>) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+  const defaultOpen = (await getCookie("sidebar_state")) === "true";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>

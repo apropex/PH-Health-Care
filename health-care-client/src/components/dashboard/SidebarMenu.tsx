@@ -60,7 +60,7 @@ export default function SidebarMenuComponent({ role }: { role: tUserRole }) {
                 <SidebarMenu>
                   {group.items.map((item, i) => (
                     <SidebarMenuItem key={joinText("collapsible-item-", i)}>
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton asChild isActive={pathname === item.url}>
                         <Link href={item.url}>
                           <item.icon /> {item.title}
                         </Link>

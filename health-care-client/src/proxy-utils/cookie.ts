@@ -69,21 +69,35 @@ export const setCookies = async (response: Response, refresh = true) => {
   return { success: true, accessToken, refreshToken };
 };
 
-export async function getCookie(key?: "accessToken" | "refreshToken"): Promise<string> {
+type Key = "all" | "accessToken" | "refreshToken" | "sidebar_state";
+
+export async function getCookie(key?: Key): Promise<string> {
   if (!key) return (await headers()).get("cookie") ?? "";
   return (await cookies())?.get(key)?.value ?? "";
 }
-
-type Key = "accessToken" | "refreshToken" | "all";
 
 /*
 `isRedirect` (default: `true`) controls auto-redirect to `/login` after clearing all cookies. Set `false` to delete cookies silently (e.g., token refresh, API logout) and handle navigation manually.
 */
 export async function deleteCookie(key: Key, isRedirect = true): Promise<void> {
-  const cookieStore = await cookies();
+  try {
+    const cookieStore = await cookies();
 
-  if (key === "all") {
-    cookieStore.getAll().forEach((c) => cookieStore.delete(c.name));
-    if (isRedirect) redirect("/login");
-  } else cookieStore.delete(key);
+    // Runtime check: only allow in server context
+    if (typeof window !== "undefined") {
+      throw new Error(
+        "deleteCookie can only be called in a Server Action or Route Handler."
+      );
+    }
+
+    if (key === "all") {
+      cookieStore.getAll().forEach((c) => cookieStore.delete(c.name));
+      if (isRedirect) redirect("/login");
+    } else {
+      const isExist = cookieStore.get(key);
+      if (isExist) cookieStore.delete(key);
+    }
+  } catch (error) {
+    throw error;
+  }
 }

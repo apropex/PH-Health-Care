@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import {
   CalendarCheck,
   ClipboardList,
@@ -65,32 +66,32 @@ const StepCard = ({
   description: string;
   index: number;
 }) => {
-  const bgColors = [
-    "bg-blue-50",
-    "bg-pink-50",
-    "bg-green-50",
-    "bg-yellow-50",
-    "bg-pink-50",
-    "bg-blue-50",
-    "bg-yellow-50",
-    "bg-green-50",
+  const bgStyles = [
+    "bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/60 dark:hover:bg-blue-950/75",
+    "bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-950/75",
+    "bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/60 dark:hover:bg-teal-950/75",
+    "bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:hover:bg-indigo-950/75",
+    "bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:hover:bg-purple-950/75",
+    "bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/60 dark:hover:bg-rose-950/75",
+    "bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-950/75",
+    "bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-950/60 dark:hover:bg-cyan-950/75",
   ];
   const textColors = [
-    "text-blue-500",
-    "text-pink-500",
-    "text-green-500",
-    "text-yellow-500",
-    "text-pink-500",
-    "text-blue-500",
-    "text-yellow-500",
-    "text-green-500",
+    "text-blue-600",
+    "text-emerald-600",
+    "text-teal-600",
+    "text-indigo-600",
+    "text-purple-600",
+    "text-rose-600",
+    "text-amber-600",
+    "text-cyan-600",
   ];
 
   return (
-    <Card className={`${bgColors[index % 8]}`}>
-      <CardContent className="p-4">
+    <Card className={cn("transition-all duration-200", bgStyles[index])}>
+      <CardContent className="p-4 min-h-32 flex items-center">
         <div className="flex items-center space-x-4">
-          <div className={`p-3 rounded-full ${textColors[index % 8]} bg-white shadow-sm`}>
+          <div className={cn("p-3 rounded-full  bg-white shadow-sm", textColors[index])}>
             <Icon size={24} />
           </div>
           <div>

@@ -1,12 +1,14 @@
+import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { ButtonTypes } from "./button.type";
 
 export default function CustomButton({
-  children,
-  className,
+  children = "",
   variant,
   size,
   asChild = false,
+  className,
+  textClass,
   icon: Icon,
   iconClass,
   iconRight = false,
@@ -14,15 +16,16 @@ export default function CustomButton({
 }: ButtonTypes) {
   return (
     <Button
-      className={className}
+      className={cn("hover:translate-y-0.5 active:scale-95", className)}
       variant={variant}
       size={size}
       asChild={asChild}
       {...props}
     >
       {Icon && !iconRight && <Icon className={iconClass} />}
-      <span className="inline-block mt-1">{children}</span>
+      {children && <span className={cn("inline-block mt-1", textClass)}>{children}</span>}
       {Icon && iconRight && <Icon className={iconClass} />}
+      {!Icon && !children && " "}
     </Button>
   );
 }

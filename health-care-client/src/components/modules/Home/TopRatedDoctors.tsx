@@ -32,7 +32,7 @@ const doctors = [
 
 const DoctorCard = ({ doctor }: { doctor: (typeof doctors)[0] }) => {
   return (
-    <Card className="text-center overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <Card className="text-center overflow-hidden hover:shadow-xl transition-shadow duration-300 dark:bg-background/20 shadow-[8px_16px_10px_rgba(0,0,0,0.3)]">
       <CardContent className="p-6">
         <div className="flex justify-center mb-5">
           <Image
@@ -65,7 +65,7 @@ const DoctorCard = ({ doctor }: { doctor: (typeof doctors)[0] }) => {
 
 export default function TopRatedDoctors() {
   return (
-    <section className="bg-blue-50/30 py-24">
+    <section className="bg-card py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-md mx-auto">
           <h2 className="text-3xl font-bold text-foreground">Our Top Rated Doctor</h2>
@@ -82,7 +82,9 @@ export default function TopRatedDoctors() {
         </div>
 
         <div className="text-center mt-12">
-          <CustomButton size="lg">View All Doctors</CustomButton>
+          <CustomButton size="lg" className="shadow-[2px_4px_4px_rgba(0,0,0,0.3)] ">
+            View All Doctors
+          </CustomButton>
         </div>
       </div>
     </section>

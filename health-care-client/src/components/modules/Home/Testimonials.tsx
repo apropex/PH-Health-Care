@@ -44,10 +44,13 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {testimonials.map((testimonial) => (
-            <Card key={testimonial.name} className="bg-background relative">
+            <Card
+              key={testimonial.name}
+              className="hover:shadow-xl transition-shadow duration-300 dark:bg-background/20 shadow-[8px_16px_10px_rgba(0,0,0,0.3)] relative"
+            >
               <CardContent className="p-8">
                 <Quote className="absolute top-4 left-4 text-primary" size={48} />
-                <div className="relative z-10">
+                <div className="relative z-10 mt-3">
                   <p className="text-muted-foreground mb-6">{testimonial.quote}</p>
                   <div className="flex items-center">
                     <Image
@@ -55,7 +58,7 @@ export default function Testimonials() {
                       alt={testimonial.name}
                       width={64}
                       height={64}
-                      className="rounded-full"
+                      className="rounded-full size-16"
                     />
                     <div className="ml-4">
                       <h4 className="font-bold text-foreground">{testimonial.name}</h4>

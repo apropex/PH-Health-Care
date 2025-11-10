@@ -1,5 +1,17 @@
 import { tUserRole, UserRole } from "@/constants";
-import { Home } from "lucide-react";
+import {
+  BarChart3,
+  Calendar,
+  CalendarCheck,
+  Clock,
+  FileText,
+  HeartPulse,
+  PlusCircle,
+  Receipt,
+  Shield,
+  Stethoscope,
+  Users,
+} from "lucide-react";
 import { ElementType } from "react";
 
 interface Item {
@@ -17,116 +29,114 @@ interface iSidebarMenu {
 }
 
 const ADMIN: iSidebarMenu = {
-  group: [
-    {
-      title: "Management",
-      items: [
-        {
-          title: "Mange Doctors",
-          url: "/admin/dashboard/manage-doctors",
-          icon: Home,
-        },
-        {
-          title: "Manage Patients",
-          url: "/admin/dashboard/manage-patients",
-          icon: Home,
-        },
-      ],
-    },
-    {
-      title: "Protected",
-      items: [
-        {
-          title: "Mange Doctors",
-          url: "/admin/dashboard/manage-doctors",
-          icon: Home,
-        },
-        {
-          title: "Manage Patients",
-          url: "/admin/dashboard/manage-patients",
-          icon: Home,
-        },
-      ],
-    },
-  ],
-
   items: [
     {
       title: "Analytics",
       url: "/admin/dashboard",
-      icon: Home,
+      icon: BarChart3,
     },
+  ],
 
+  group: [
     {
-      title: "Calendar",
-      url: "#",
-      icon: Home,
+      title: "Management User",
+      items: [
+        {
+          title: "Manage Admin",
+          url: "/admin/dashboard/manage-admin",
+          icon: Shield,
+        },
+        {
+          title: "Manage Doctors",
+          url: "/admin/dashboard/manage-doctors",
+          icon: Stethoscope,
+        },
+        {
+          title: "Manage Patients",
+          url: "/admin/dashboard/manage-patients",
+          icon: Users,
+        },
+      ],
+    },
+    {
+      title: "Manage Docs",
+      items: [
+        {
+          title: "Manage Appointments",
+          url: "/admin/dashboard/manage-appointments",
+          icon: CalendarCheck,
+        },
+        {
+          title: "Manage Schedules",
+          url: "/admin/dashboard/manage-schedules",
+          icon: Clock,
+        },
+        {
+          title: "Manage Specialties",
+          url: "/admin/dashboard/manage-specialties",
+          icon: HeartPulse,
+        },
+      ],
     },
   ],
 };
+
 const DOCTOR: iSidebarMenu = {
-  group: [
-    {
-      title: "Management",
-      items: [
-        {
-          title: "Mange Doctors",
-          url: "/admin/dashboard/manage-doctors",
-          icon: Home,
-        },
-        {
-          title: "Manage Patients",
-          url: "/admin/dashboard/manage-patients",
-          icon: Home,
-        },
-      ],
-    },
-  ],
-
   items: [
     {
       title: "Analytics",
       url: "/admin/dashboard",
-      icon: Home,
+      icon: BarChart3,
     },
-
     {
-      title: "Calendar",
-      url: "#",
-      icon: Home,
+      title: "Appointments",
+      url: "/admin/dashboard/appointments",
+      icon: CalendarCheck,
+    },
+    {
+      title: "Prescriptions",
+      url: "/admin/dashboard/prescriptions",
+      icon: FileText,
+    },
+    {
+      title: "My Schedules",
+      url: "/admin/dashboard/my-schedules",
+      icon: Clock,
     },
   ],
+
+  group: [],
 };
-const PATIENT: iSidebarMenu = {
-  group: [
-    {
-      title: "Management",
-      items: [
-        {
-          title: "Mange Doctors",
-          url: "/admin/dashboard/manage-doctors",
-          icon: Home,
-        },
-        {
-          title: "Manage Patients",
-          url: "/admin/dashboard/manage-patients",
-          icon: Home,
-        },
-      ],
-    },
-  ],
 
+const PATIENT: iSidebarMenu = {
   items: [
     {
       title: "Analytics",
-      url: "/admin/dashboard",
-      icon: Home,
+      url: "/dashboard",
+      icon: BarChart3,
     },
+  ],
 
+  group: [
     {
-      title: "Calendar",
-      url: "#",
-      icon: Home,
+      title: "Appointments",
+      items: [
+        {
+          title: "My Appointments",
+          url: "/dashboard/my-appointments",
+          icon: Calendar,
+        },
+        {
+          title: "Book Appointment",
+          url: "/dashboard/book-appointment",
+          icon: PlusCircle,
+        },
+        {
+          title: "My Prescriptions",
+          url: "/dashboard/my-prescriptions",
+          icon: Receipt,
+        },
+      ],
     },
   ],
 };

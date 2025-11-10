@@ -41,7 +41,7 @@ export default function PublicNavLinks() {
   }
 
   return (
-    <div className="flex items-center flex-wrap text-sm text-muted-foreground">
+    <div className="flex items-center flex-wrap text-sm text-black/80 dark:text-primary-foreground">
       {roleBasedLinks.map(({ href, name }) => (
         <Link
           href={href}

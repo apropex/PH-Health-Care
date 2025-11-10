@@ -28,13 +28,13 @@ export async function NavUser() {
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="size-8 rounded-[0.5rem] flex items-center justify-center overflow-hidden">
+            <button className="size-6 rounded-[0.4rem] flex items-center justify-center overflow-hidden">
               <Image
                 src={avatar}
                 alt={decoded.name}
-                width={32}
-                height={32}
-                className="object-cover size-8"
+                width={28}
+                height={28}
+                className="object-cover size-6"
               />
             </button>
           </DropdownMenuTrigger>

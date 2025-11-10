@@ -1,16 +1,13 @@
-import { StarIcon } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarSeparator,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import getUserFromJwtPayload from "@/hooks/getUserFromJwtPayload";
-import Link from "next/link";
+import AppSidebarFooter from "./AppSidebarFooter";
+import AppSidebarHeader from "./AppSidebarHeader";
 import SidebarMenuComponent from "./SidebarMenu";
 
 export default async function AppSidebar({
@@ -22,22 +19,21 @@ export default async function AppSidebar({
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="border-b relative">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/">
-                <StarIcon className="size-5" />
-                <span className="text-base font-semibold">PH-Health-Care</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <AppSidebarHeader />
         </SidebarMenu>
-        <SidebarSeparator />
+
+        <div className="absolute right-0 md:hidden">
+          <SidebarTrigger />
+        </div>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarMenuComponent role={user.role} />
       </SidebarContent>
+
+      <AppSidebarFooter user={user} />
     </Sidebar>
   );
 }
