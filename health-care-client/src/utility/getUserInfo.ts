@@ -1,8 +1,9 @@
 import { iUser } from "@/interfaces/user.interfaces";
+import { JwtPayload } from "jsonwebtoken";
 
-export default function getUserInfo(user: iUser | null) {
-  let avatar: string = "/avatar.png";
-  let name: string = "Unknown User";
+export default function getUserInfo(user: iUser | JwtPayload | null) {
+  let avatar: string = (user as JwtPayload)?.avatar || "/avatar.png";
+  let name: string = (user as JwtPayload)?.name || "Unknown User";
   let email: string = "No Email Provided";
 
   if (user) {

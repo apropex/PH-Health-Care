@@ -13,10 +13,17 @@ import Password from "@/components/ui/password";
 import { login } from "@/services/auth/login";
 import { getZodError } from "@/utility/zodValidatorFn";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function LoginForm({ redirect }: { redirect?: string }) {
   const [state, action, isPending] = useActionState(login, null);
+
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   return (
     <form action={action}>

@@ -1,5 +1,3 @@
-"use client";
-
 import CustomButton from "@/components/buttons/CustomButton";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,55 +16,43 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useUser } from "@/Providers/UserProvider";
-import getUserInfo from "@/utility/getUserInfo";
+import { checkToken } from "@/proxy-utils/check-token";
+import { getCookie } from "@/proxy-utils/cookie";
+import { getInitials } from "@/utility/getInitials";
 import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
-import Logout from "../logout-alert";
+import Logout from "../alerts/logout-alert";
+import AvatarPro from "../Avatar";
 
-function getInitials(name: string): string {
-  if (!name) return "";
-  const parts = name.trim().split(" ").filter(Boolean);
+export default async function ProfileMenu() {
+  const accessToken = await getCookie("accessToken");
+  const decoded = await checkToken(accessToken, "access");
 
-  if (parts.length === 1) {
-    return parts[0][0].toUpperCase();
-  }
-
-  const first = parts[0][0];
-  const last = parts[parts.length - 1][0];
-  return (first + last).toUpperCase();
-}
-
-export default function ProfileMenu() {
-  const { user } = useUser();
-  const { avatar, name, email } = getUserInfo(user);
+  const avatar = decoded?.avatar || "/avatar.png";
 
   return (
     <div>
-      {!user ? (
+      {!decoded ? (
         <Link href={"/login"}>
           <Button size={"responsive"}>Login</Button>
         </Link>
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className="rounded-md">
-              <AvatarImage src={avatar} alt={name} />
-              <AvatarFallback>{getInitials(name)}</AvatarFallback>
+            <Avatar className="rounded-md cursor-pointer">
+              <AvatarImage src={avatar} alt={decoded.name} />
+              <AvatarFallback>{getInitials(decoded.name)}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 mt-4" align="end">
             <DropdownMenuLabel className="flex items-start gap-3">
-              <Avatar className="rounded-md">
-                <AvatarImage src={avatar} alt={name} />
-                <AvatarFallback>{getInitials(name)}</AvatarFallback>
-              </Avatar>
+              <AvatarPro src={avatar} alt={decoded.name} className="rounded-md" />
               <div className="flex min-w-0 flex-col">
                 <span className="truncate text-sm font-medium text-foreground">
-                  {name}
+                  {decoded.name}
                 </span>
                 <span className="truncate text-xs font-normal text-muted-foreground">
-                  {email}
+                  {decoded.email}
                 </span>
               </div>
             </DropdownMenuLabel>

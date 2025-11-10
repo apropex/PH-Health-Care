@@ -47,15 +47,30 @@ const login = async ({
 
   if (patient) {
     newUser = { ...rest, patient };
-    payload = { ...rest, secondaryId: patient.id };
+    payload = {
+      ...rest,
+      secondaryId: patient.id,
+      avatar: patient.profilePhoto,
+      name: patient.name,
+    };
   }
   if (doctor) {
     newUser = { ...rest, doctor };
-    payload = { ...rest, secondaryId: doctor.id };
+    payload = {
+      ...rest,
+      secondaryId: doctor.id,
+      avatar: doctor.profilePhoto,
+      name: doctor.name,
+    };
   }
   if (admin) {
     newUser = { ...rest, admin };
-    payload = { ...rest, secondaryId: admin.id };
+    payload = {
+      ...rest,
+      secondaryId: admin.id,
+      avatar: admin.profilePhoto,
+      name: admin.name,
+    };
   }
 
   const access_token = generateAccessToken(payload);

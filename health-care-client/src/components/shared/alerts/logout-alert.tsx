@@ -3,22 +3,29 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { iChildren } from "@/interfaces";
 import { useUser } from "@/Providers/UserProvider";
+import { deleteCookie } from "@/proxy-utils/cookie";
 import { LogOutIcon, ShieldAlert, XIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import CustomButton from "../buttons/CustomButton";
-import LoadingButton from "../buttons/LoadingButton";
+import { toast } from "sonner";
+import CustomButton from "../../buttons/CustomButton";
+import LoadingButton from "../../buttons/LoadingButton";
 
 export default function Logout({ children }: iChildren) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { setUser } = useUser();
+  const router = useRouter();
 
   const handleLogout = async () => {
+    // "use client";
     try {
       setLoading(true);
-      await fetch("/api/logout");
+      await deleteCookie("all", false);
+      toast.success("Logged out successfully!");
       setOpen(false);
       setUser(null);
+      router.push("/login");
     } catch {
     } finally {
       setLoading(false);

@@ -24,7 +24,6 @@ const loginSchema = z.object({
 // === Return Type ===
 interface iLoginResponse extends iZodValidatorReturns {
   message?: string;
-  user?: iUser | null;
 }
 
 export const login = async (_: any, formData: FormData): Promise<iLoginResponse> => {
@@ -53,16 +52,16 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
 
     const result = await parseJSONbody<iUser>(response);
 
-    if (!result.success) throw new Error(result.message || "Login failed");
+    if (!result.success) throw new Error(result.message || "");
 
     const { success: tokenSuccess, accessToken } = await setCookies(response);
 
-    if (!tokenSuccess || !accessToken)
+    if (!tokenSuccess || !accessToken) {
       return {
         success: false,
         message: "Authentication failed: No cookies received",
-        user: null,
       };
+    }
 
     const role = (await checkToken(accessToken, "access"))?.role as tUserRole;
 
@@ -70,9 +69,7 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
       redirectPath = role ? getDefaultDashboardRoute(role) : "/";
     }
 
-    console.log({ redirectPath });
-
-    redirect(redirectPath);
+    redirect(`${redirectPath}?loggedIn=true`);
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
     else {
@@ -80,7 +77,6 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
       return {
         success: false,
         message: error?.message || "An unexpected error occurred during login",
-        user: null,
       };
     }
   }

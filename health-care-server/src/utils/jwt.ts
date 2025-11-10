@@ -4,7 +4,11 @@ import _env from "../config";
 import ApiError from "../error-handler/ApiError";
 import sCode from "./statusCode";
 
-export type UserTokenPayload = Partial<User> & { secondaryId?: string };
+export type UserTokenPayload = Partial<User> & {
+  secondaryId?: string;
+  avatar?: string;
+  name?: string;
+};
 
 const payloadMaker = ({
   id,
@@ -13,6 +17,8 @@ const payloadMaker = ({
   role,
   needPasswordChange,
   status,
+  avatar,
+  name,
 }: UserTokenPayload) => {
   return {
     id,
@@ -21,6 +27,8 @@ const payloadMaker = ({
     role,
     needPasswordChange,
     status,
+    avatar,
+    name,
   };
 };
 

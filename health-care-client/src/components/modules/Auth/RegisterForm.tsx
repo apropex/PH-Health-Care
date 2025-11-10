@@ -12,10 +12,17 @@ import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { registerPatient } from "@/services/auth/registerPatient";
 import { getZodError } from "@/utility/zodValidatorFn";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function RegisterForm({ redirect }: { redirect?: string }) {
   const [state, formAction, isPending] = useActionState(registerPatient, null);
+
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   return (
     <form action={formAction}>

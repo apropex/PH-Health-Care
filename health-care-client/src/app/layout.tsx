@@ -1,3 +1,5 @@
+import Alerts from "@/components/shared/alerts/alert";
+import { Toaster } from "@/components/ui/sonner";
 import getUser from "@/helper/getUser";
 import { getCookie } from "@/hooks/getCookie";
 import { iChildren } from "@/interfaces";
@@ -39,6 +41,8 @@ export default async function RootLayout({ children }: Readonly<iChildren>) {
           disableTransitionOnChange
         >
           <UserProvider initialUser={initialUser}>{children}</UserProvider>
+          <Alerts />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>

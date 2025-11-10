@@ -10,5 +10,7 @@ declare module "jsonwebtoken" {
     role: tUserRole;
     needPasswordChange: boolean;
     status: tUserStatus;
+    avatar: string;
+    name: string;
   }
 }

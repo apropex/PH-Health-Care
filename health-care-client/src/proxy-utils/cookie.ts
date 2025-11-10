@@ -1,5 +1,8 @@
+"use server";
+
 import { parse } from "cookie";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 // === Constants ===
 const CookieOptions = {
@@ -73,12 +76,14 @@ export async function getCookie(key?: "accessToken" | "refreshToken"): Promise<s
 
 type Key = "accessToken" | "refreshToken" | "all";
 
-export async function deleteCookie(key: Key): Promise<void> {
+/*
+`isRedirect` (default: `true`) controls auto-redirect to `/login` after clearing all cookies. Set `false` to delete cookies silently (e.g., token refresh, API logout) and handle navigation manually.
+*/
+export async function deleteCookie(key: Key, isRedirect = true): Promise<void> {
   const cookieStore = await cookies();
 
   if (key === "all") {
     cookieStore.getAll().forEach((c) => cookieStore.delete(c.name));
-    return;
-  }
-  cookieStore.delete(key);
+    if (isRedirect) redirect("/login");
+  } else cookieStore.delete(key);
 }

@@ -3,9 +3,14 @@
 
 import mergeApi from "@/utility/merge-api";
 import parseJSONbody from "@/utility/parseJSONbody";
-import { zodValidatorFn } from "@/utility/zodValidatorFn";
+import { iZodValidatorReturns, zodValidatorFn } from "@/utility/zodValidatorFn";
 import z from "zod";
 import { login } from "./login";
+
+// === Return Type ===
+interface iRegisterResponse extends iZodValidatorReturns {
+  message?: string;
+}
 
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/;
 
@@ -27,7 +32,10 @@ const registerValidation = z
     path: ["confirmPassword"],
   });
 
-export const registerPatient = async (_: any, formData: FormData) => {
+export const registerPatient = async (
+  _: any,
+  formData: FormData
+): Promise<iRegisterResponse> => {
   const name = formData.get("name");
   const address = formData.get("address");
   const email = formData.get("email");
@@ -69,8 +77,8 @@ export const registerPatient = async (_: any, formData: FormData) => {
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
     return {
+      success: false,
       message: error?.message || "Patient registration failed",
-      error,
     };
   }
 };

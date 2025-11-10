@@ -15,9 +15,6 @@ export default async function proxy(request: NextRequest) {
   const loginUrl = new URL("/login", request.url);
   loginUrl.searchParams.set("redirect", pathname);
 
-  // const accessToken = request.cookies.get("accessToken")?.value ?? null;
-  // const refreshToken = request.cookies.get("refreshToken")?.value ?? null;
-
   const accessToken = (await getCookie("accessToken")) || null;
   const refreshToken = (await getCookie("refreshToken")) || null;
 
