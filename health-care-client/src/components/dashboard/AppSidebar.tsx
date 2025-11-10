@@ -1,33 +1,24 @@
-"use client";
-
 import { StarIcon } from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { tUserRole } from "@/constants";
-import { useUser } from "@/Providers/UserProvider";
+import getUserFromJwtPayload from "@/hooks/getUserFromJwtPayload";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { NavUser } from "./nav-user";
-import SidebarRoutes from "./SidebarRoutes";
+import SidebarMenuComponent from "./SidebarMenu";
 
-export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
-  const { user } = useUser();
+export default async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const user = await getUserFromJwtPayload();
 
   if (!user) return <div></div>;
-
-  const routes = SidebarRoutes(user.role as tUserRole);
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -42,30 +33,11 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SidebarSeparator />
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>{user?.role} ROUTES</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {routes.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarMenuComponent role={user.role} />
       </SidebarContent>
-
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
     </Sidebar>
   );
 }

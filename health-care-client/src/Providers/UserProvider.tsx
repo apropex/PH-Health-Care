@@ -1,7 +1,7 @@
-// src/context/UserContext.tsx
-"use client"; // অবশ্যই Client Component
+"use client";
 
 import { iUser } from "@/interfaces/user.interfaces";
+import { JwtPayload } from "jsonwebtoken";
 import {
   createContext,
   Dispatch,
@@ -12,10 +12,12 @@ import {
   useState,
 } from "react";
 
+type tUser = iUser | JwtPayload | null;
+
 // Context Type
 interface UserContextType {
-  user: iUser | null;
-  setUser: Dispatch<SetStateAction<iUser | null>>;
+  user: tUser;
+  setUser: Dispatch<SetStateAction<tUser>>;
 }
 
 // Context
@@ -24,12 +26,12 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 // Provider Props
 interface UserProviderProps {
   children: ReactNode;
-  initialUser?: iUser | null;
+  initialUser?: tUser;
 }
 
 // Provider Component
 export const UserProvider = ({ children, initialUser = null }: UserProviderProps) => {
-  const [user, setUser] = useState<iUser | null>(initialUser);
+  const [user, setUser] = useState<tUser>(initialUser);
 
   // Stable value with useMemo
   const value = useMemo(() => ({ user, setUser }), [user]);

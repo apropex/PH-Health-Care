@@ -1,11 +1,10 @@
 import Alerts from "@/components/shared/alerts/alert";
 import { Toaster } from "@/components/ui/sonner";
-import getUser from "@/helper/getUser";
-import { getCookie } from "@/hooks/getCookie";
+import getUserFromJwtPayload from "@/hooks/getUserFromJwtPayload";
 import { iChildren } from "@/interfaces";
-import { iUser } from "@/interfaces/user.interfaces";
 import { ThemeProvider } from "@/Providers/theme-provider";
 import { UserProvider } from "@/Providers/UserProvider";
+import { JwtPayload } from "jsonwebtoken";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,10 +25,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<iChildren>) {
-  let initialUser: iUser | null = null;
+  let initialUser: JwtPayload | null = null;
 
-  const { success, user } = await getUser(await getCookie());
-  if (success) initialUser = user;
+  const user = await getUserFromJwtPayload();
+  if (user) initialUser = user;
 
   return (
     <html lang="en" suppressHydrationWarning>

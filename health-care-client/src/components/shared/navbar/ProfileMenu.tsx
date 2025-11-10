@@ -16,8 +16,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { checkToken } from "@/proxy-utils/check-token";
-import { getCookie } from "@/proxy-utils/cookie";
+import getUserFromJwtPayload from "@/hooks/getUserFromJwtPayload";
 import { getInitials } from "@/utility/getInitials";
 import { LogOutIcon } from "lucide-react";
 import Link from "next/link";
@@ -25,8 +24,7 @@ import Logout from "../alerts/logout-alert";
 import AvatarPro from "../Avatar";
 
 export default async function ProfileMenu() {
-  const accessToken = await getCookie("accessToken");
-  const decoded = await checkToken(accessToken, "access");
+  const decoded = await getUserFromJwtPayload();
 
   const avatar = decoded?.avatar || "/avatar.png";
 

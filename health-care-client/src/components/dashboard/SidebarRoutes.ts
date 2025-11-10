@@ -1,96 +1,137 @@
 import { tUserRole, UserRole } from "@/constants";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Home } from "lucide-react";
+import { ElementType } from "react";
 
-const ADMIN = [
-  {
-    title: "Analytics",
-    url: "/dashboard/admin",
-    icon: Home,
-  },
-  {
-    title: "Mange Doctors",
-    url: "/dashboard/admin/manage-doctors",
-    icon: Home,
-  },
-  {
-    title: "Manage Patients",
-    url: "/dashboard/admin/manage-patients",
-    icon: Home,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
+interface Item {
+  title: string;
+  url: string;
+  icon: ElementType;
+}
 
-const PATIENT = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
+interface iSidebarMenu {
+  group?: {
+    title: string;
+    items: Item[];
+  }[];
+  items?: Item[];
+}
 
-const DOCTOR = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
+const ADMIN: iSidebarMenu = {
+  group: [
+    {
+      title: "Management",
+      items: [
+        {
+          title: "Mange Doctors",
+          url: "/admin/dashboard/manage-doctors",
+          icon: Home,
+        },
+        {
+          title: "Manage Patients",
+          url: "/admin/dashboard/manage-patients",
+          icon: Home,
+        },
+      ],
+    },
+    {
+      title: "Protected",
+      items: [
+        {
+          title: "Mange Doctors",
+          url: "/admin/dashboard/manage-doctors",
+          icon: Home,
+        },
+        {
+          title: "Manage Patients",
+          url: "/admin/dashboard/manage-patients",
+          icon: Home,
+        },
+      ],
+    },
+  ],
 
-export default function SidebarRoutes(ROLE: tUserRole) {
+  items: [
+    {
+      title: "Analytics",
+      url: "/admin/dashboard",
+      icon: Home,
+    },
+
+    {
+      title: "Calendar",
+      url: "#",
+      icon: Home,
+    },
+  ],
+};
+const DOCTOR: iSidebarMenu = {
+  group: [
+    {
+      title: "Management",
+      items: [
+        {
+          title: "Mange Doctors",
+          url: "/admin/dashboard/manage-doctors",
+          icon: Home,
+        },
+        {
+          title: "Manage Patients",
+          url: "/admin/dashboard/manage-patients",
+          icon: Home,
+        },
+      ],
+    },
+  ],
+
+  items: [
+    {
+      title: "Analytics",
+      url: "/admin/dashboard",
+      icon: Home,
+    },
+
+    {
+      title: "Calendar",
+      url: "#",
+      icon: Home,
+    },
+  ],
+};
+const PATIENT: iSidebarMenu = {
+  group: [
+    {
+      title: "Management",
+      items: [
+        {
+          title: "Mange Doctors",
+          url: "/admin/dashboard/manage-doctors",
+          icon: Home,
+        },
+        {
+          title: "Manage Patients",
+          url: "/admin/dashboard/manage-patients",
+          icon: Home,
+        },
+      ],
+    },
+  ],
+
+  items: [
+    {
+      title: "Analytics",
+      url: "/admin/dashboard",
+      icon: Home,
+    },
+
+    {
+      title: "Calendar",
+      url: "#",
+      icon: Home,
+    },
+  ],
+};
+
+export default function SidebarRoutes(ROLE: tUserRole): iSidebarMenu {
   switch (ROLE) {
     case UserRole.ADMIN:
       return ADMIN;
@@ -99,6 +140,6 @@ export default function SidebarRoutes(ROLE: tUserRole) {
     case UserRole.DOCTOR:
       return DOCTOR;
     default:
-      return [];
+      return {};
   }
 }
