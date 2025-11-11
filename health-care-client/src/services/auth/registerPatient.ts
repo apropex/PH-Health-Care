@@ -41,6 +41,7 @@ export const registerPatient = async (
   const email = formData.get("email");
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
+  const avatar = formData.get("avatar") as File;
   const needPasswordChange = false;
 
   try {
@@ -54,12 +55,17 @@ export const registerPatient = async (
 
     if (!zodRes.success) return zodValidatorFn(zodRes);
 
+    console.log("avatar", avatar);
+
+    if (!avatar) return { success: false };
+
     const registerData = {
       user: { email, password, needPasswordChange },
       patient: { name, address },
     };
 
     const newFormData = new FormData();
+    newFormData.append("file", avatar);
     newFormData.append("data", JSON.stringify(registerData));
 
     const response = await fetch(mergeApi("/patient/create-patient"), {

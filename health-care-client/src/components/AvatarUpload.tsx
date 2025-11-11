@@ -68,7 +68,7 @@ export default function AvatarUpload({ setAvatar, preview }: iProps) {
       </div>
       {fileName && <p className="text-xs text-muted-foreground">{fileName}</p>}
       <p aria-live="polite" role="region" className="mt-2 text-xs text-muted-foreground">
-        Upload Doctor Avatar
+        Upload Avatar
       </p>
     </div>
   );

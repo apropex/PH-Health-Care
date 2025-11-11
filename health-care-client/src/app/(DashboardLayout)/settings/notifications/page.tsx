@@ -1,9 +1,11 @@
 //
 
+import ComingSoon from "@/components/shared/ComingSoon";
+
 export default function SettingsNotificationsPage() {
   return (
     <div className="">
-      <h1 className="">This is SettingsNotificationsPage component</h1>
+      <ComingSoon text="The Notification Settings" />
     </div>
   );
 }

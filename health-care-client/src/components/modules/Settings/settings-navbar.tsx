@@ -19,15 +19,18 @@ export default function SettingsNavbar() {
 
   //
   return (
-    <div className="w-full flex items-center">
+    <div className="w-full flex flex-wrap items-center">
       {settingsMenu.map((menu, i) => (
         <Link
           href={menu.href}
           key={joinText("settings-menu-", i)}
-          className={cn("flex-1 bg-accent text-center p-2", {
-            "bg-background border-b border-foreground/60 dark:border-foreground":
-              menu.href === pathname,
-          })}
+          className={cn(
+            "flex-1 bg-accent text-center text-sm md:text-base md:font-medium p-1 md:p-2 whitespace-nowrap",
+            {
+              "bg-background border-b border-foreground/60 dark:border-foreground":
+                menu.href === pathname,
+            }
+          )}
         >
           {menu.name}
         </Link>
