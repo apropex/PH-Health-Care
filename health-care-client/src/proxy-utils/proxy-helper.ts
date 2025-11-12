@@ -7,11 +7,11 @@ export interface RouteConfig {
   patterns: RegExp[];
 }
 
-export const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
+export const authRoutes = ["/login", "/register", "/forgot-password"];
 
 export const commonRoutes: RouteConfig = {
-  exact: ["/my-profile", "/settings"],
-  patterns: [],
+  exact: ["/my-profile"],
+  patterns: [/^\/settings(\/|$)/],
 };
 
 export const doctorRoutes: RouteConfig = {
@@ -33,17 +33,17 @@ export const isAuthRoute = (pathname: string): boolean => {
   return authRoutes.some((route: string) => route === pathname);
 };
 
-export const isValidRote = (routes: RouteConfig, pathname: string): boolean => {
+export const isValidRoute = (routes: RouteConfig, pathname: string): boolean => {
   const exact = routes.exact.includes(pathname);
   const pattern = routes.patterns.some((regex) => regex.test(pathname));
   return exact || pattern || false;
 };
 
 export const getRouteOwner = (pathname: string): tUserRole | "COMMON" | null => {
-  if (isValidRote(adminRoutes, pathname)) return "ADMIN";
-  if (isValidRote(patientRoutes, pathname)) return "PATIENT";
-  if (isValidRote(doctorRoutes, pathname)) return "DOCTOR";
-  if (isValidRote(commonRoutes, pathname)) return "COMMON";
+  if (isValidRoute(adminRoutes, pathname)) return "ADMIN";
+  if (isValidRoute(patientRoutes, pathname)) return "PATIENT";
+  if (isValidRoute(doctorRoutes, pathname)) return "DOCTOR";
+  if (isValidRoute(commonRoutes, pathname)) return "COMMON";
   return null;
 };
 

@@ -1,6 +1,6 @@
 import { iDoctorQuery } from "@/interfaces/query.interfaces";
 import { iDoctor } from "@/interfaces/user.interfaces";
-import { _fetch } from "@/utility/_fetch";
+import { fetchHelper } from "@/utility/_fetch";
 import mergeApi from "@/utility/merge-api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -24,12 +24,12 @@ export function useDoctor(searchParams?: iDoctorQuery) {
   const getDoctors = useQuery({
     queryKey,
     enabled: searchParams !== undefined,
-    queryFn: async () => await _fetch<iDoctor[]>(mergeApi("/doctor")),
+    queryFn: async () => await fetchHelper<iDoctor[]>(mergeApi("/doctor")),
   });
 
   const createDoctor = useMutation({
     mutationFn: async (data: FormData) => {
-      return await _fetch<iDoctor>(mergeApi("/doctor/create-doctor"), {
+      return await fetchHelper<iDoctor>(mergeApi("/doctor/create-doctor"), {
         method: "POST",
         body: data,
       });
@@ -41,7 +41,7 @@ export function useDoctor(searchParams?: iDoctorQuery) {
 
   const updateDoctor = useMutation({
     mutationFn: async ({ payload, id }: { payload: FormData; id: string }) => {
-      return await _fetch<iDoctor>(mergeApi("/doctor", id), {
+      return await fetchHelper<iDoctor>(mergeApi("/doctor", id), {
         method: "PATCH",
         body: payload,
       });
@@ -53,7 +53,7 @@ export function useDoctor(searchParams?: iDoctorQuery) {
 
   const deleteDoctor = useMutation({
     mutationFn: async (id: string) => {
-      return await _fetch<null>(mergeApi("/doctor", id), { method: "DELETE" });
+      return await fetchHelper<null>(mergeApi("/doctor", id), { method: "DELETE" });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["DOCTORS"] });

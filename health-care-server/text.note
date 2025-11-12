@@ -17,10 +17,10 @@ touch review.routes.ts review.controller.ts review.service.ts review.validation.
 
 
 
-
-
+// stripe webhook command
+stripe login // first-time
 stripe listen --forward-to localhost:5000/webhook
-
+stripe trigger payment_intent.succeeded // if needed
 
 
 

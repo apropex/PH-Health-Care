@@ -1,36 +1,140 @@
+import { getCookie } from "@/hooks/getCookie";
 import { iResponse } from "@/interfaces";
+import joinText from "./joinText";
 
-export async function _fetch<TResponse = unknown, TRequest = unknown>(
+const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+
+type TypeMethods = Record<
+  Lowercase<(typeof methods)[number]>,
+  <TResponse = unknown, TRequest = unknown>(
+    api: string,
+    options?: RequestInit,
+    data?: TRequest
+  ) => Promise<iResponse<TResponse>>
+>;
+
+export async function fetchHelper<TResponse = unknown, TRequest = unknown>(
   api: string,
-  param?: RequestInit,
-  body?: TRequest
+  options: RequestInit = {},
+  data?: TRequest
 ): Promise<iResponse<TResponse>> {
-  //
+  const isGetMethod = options.method === "GET";
 
-  const options: RequestInit = param || {};
+  const body = options.body || JSON.stringify(data);
+  if (body && !isGetMethod) options.body = body;
 
-  options.headers = {
-    "Content-Type": "application/json",
-  };
+  const tokens = await getCookie();
+  const isServer = typeof window === "undefined";
 
-  if (!options.headers.cookie) options.credentials = "include";
-
-  // Only include body if method allows it
-  if (options.method !== "GET" && options.method !== "HEAD" && body !== undefined) {
-    options.body = JSON.stringify(body);
-  }
-
-  const res = await fetch(api, options);
+  const res = await fetch(joinText(baseUrl, api), {
+    ...options,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(isServer && tokens ? { cookie: tokens } : {}),
+      ...(options.headers || {}),
+    },
+  });
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`HTTP error! Status: ${res.status}, Message: ${errorText}`);
+    throw new Error(`HTTP error ${res.status}: ${errorText}`);
   }
 
-  // Try parsing JSON safely
   try {
     return (await res.json()) as iResponse<TResponse>;
   } catch {
-    throw new Error("Failed to parse JSON response.");
+    throw new Error(`Invalid JSON in response from ${api}`);
   }
 }
+
+export const _fetch = Object.fromEntries(
+  methods.map((method) => [
+    method.toLowerCase(),
+    async <TResponse = unknown, TRequest = unknown>(
+      api: string,
+      options: RequestInit = {},
+      data?: TRequest
+    ): Promise<iResponse<TResponse>> => {
+      return fetchHelper<TResponse, TRequest>(api, { ...options, method }, data);
+    },
+  ])
+) as TypeMethods;
+
+//
+
+/*
+export const _fetch = {
+  get: async <TResponse = any, TRequest = any>(
+    api: string,
+    options: RequestInit
+  ): Promise<iResponse<TResponse>> => {
+    return serverFetchHelper<TResponse, TRequest>(api, { ...options, method: "GET" });
+  },
+
+  //
+  post: async <TResponse = any, TRequest = any>(
+    api: string,
+    options: RequestInit = {},
+    data?: any
+  ): Promise<iResponse<TResponse>> => {
+    return serverFetchHelper<TResponse, TRequest>(
+      api,
+      {
+        ...options,
+        method: "POST",
+      },
+      data
+    );
+  },
+
+  //
+  patch: async <TResponse = any, TRequest = any>(
+    api: string,
+    options: RequestInit = {},
+    data?: any
+  ): Promise<iResponse<TResponse>> => {
+    return serverFetchHelper<TResponse, TRequest>(
+      api,
+      {
+        ...options,
+        method: "PATCH",
+      },
+      data
+    );
+  },
+
+  //
+  put: async <TResponse = any, TRequest = any>(
+    api: string,
+    options: RequestInit = {},
+    data?: any
+  ): Promise<iResponse<TResponse>> => {
+    return serverFetchHelper<TResponse, TRequest>(
+      api,
+      {
+        ...options,
+        method: "PUT",
+      },
+      data
+    );
+  },
+
+  //
+  delete: async <TResponse = any, TRequest = any>(
+    api: string,
+    options: RequestInit = {},
+    data?: any
+  ): Promise<iResponse<TResponse>> => {
+    return serverFetchHelper<TResponse, TRequest>(
+      api,
+      {
+        ...options,
+        method: "DELETE",
+      },
+      data
+    );
+  },
+};
+*/
