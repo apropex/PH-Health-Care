@@ -1,17 +1,11 @@
 "use client";
 
 import LoadingButton from "@/components/buttons/LoadingButton";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
+import ErrorFormDescription from "@/components/shared/ErrorFormDescription";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { login } from "@/services/auth/login";
-import { getZodError } from "@/utility/zodValidatorFn";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
@@ -42,11 +36,7 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
                 placeholder="rabbit@example.com"
                 required
               />
-              {getZodError(state, "email") && (
-                <FieldDescription className="text-destructive">
-                  {getZodError(state, "email")}
-                </FieldDescription>
-              )}
+              <ErrorFormDescription state={state} fieldName="email" />
             </Field>
 
             <Field>
@@ -62,11 +52,7 @@ export default function LoginForm({ redirect }: { redirect?: string }) {
                 defaultValue={"Z/x32165"}
                 required
               />
-              {getZodError(state, "password") && (
-                <FieldDescription className="text-destructive">
-                  {getZodError(state, "password")}
-                </FieldDescription>
-              )}
+              <ErrorFormDescription state={state} fieldName="password" />
             </Field>
           </FieldGroup>
         </FieldSet>

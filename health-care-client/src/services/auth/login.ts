@@ -9,9 +9,10 @@ import {
   getDefaultDashboardRoute,
   isValidRedirectPath,
 } from "@/proxy-utils/proxy-helper";
+import { errorResponse } from "@/utility/errorResponse";
 import mergeApi from "@/utility/merge-api";
 import parseJSONbody from "@/utility/parseJSONbody";
-import { iZodValidatorReturns, zodValidatorFn } from "@/utility/zodValidatorFn";
+import { iZodValidatorReturns, zodErrorReturn } from "@/utility/zodValidatorFn";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -37,7 +38,7 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
 
     const validation = loginSchema.safeParse(rawData);
     if (!validation.success) {
-      return zodValidatorFn(validation);
+      return zodErrorReturn(validation);
     }
 
     const { email, password } = validation.data;
@@ -72,12 +73,6 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
     redirect(`${redirectPath}?loggedIn=true`);
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
-    else {
-      console.error("Login error:", error);
-      return {
-        success: false,
-        message: error?.message || "An unexpected error occurred during login",
-      };
-    }
+    else return errorResponse(error);
   }
 };

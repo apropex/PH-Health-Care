@@ -1,7 +1,7 @@
 "use client";
 
 import { tUserRole } from "@/constants";
-import joinText from "@/utility/joinText";
+import join from "@/utility/joinText";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,7 +44,7 @@ export default function SidebarMenuComponent({ role }: { role: tUserRole }) {
 
       {routes?.group?.map((group, i) => (
         <Collapsible
-          key={joinText("collapsible-", i)}
+          key={join("collapsible-", i)}
           defaultOpen
           className="group/collapsible border-b"
         >
@@ -59,7 +59,7 @@ export default function SidebarMenuComponent({ role }: { role: tUserRole }) {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {group.items.map((item, i) => (
-                    <SidebarMenuItem key={joinText("collapsible-item-", i)}>
+                    <SidebarMenuItem key={join("collapsible-item-", i)}>
                       <SidebarMenuButton asChild isActive={pathname === item.url}>
                         <Link href={item.url}>
                           <item.icon /> {item.title}

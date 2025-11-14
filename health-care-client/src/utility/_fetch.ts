@@ -1,6 +1,6 @@
 import { getCookie } from "@/hooks/getCookie";
 import { iResponse } from "@/interfaces";
-import joinText from "./joinText";
+import join from "./joinText";
 
 const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
@@ -27,7 +27,7 @@ export async function fetchHelper<TResponse = unknown, TRequest = unknown>(
   const tokens = await getCookie();
   const isServer = typeof window === "undefined";
 
-  const res = await fetch(joinText(baseUrl, api), {
+  const res = await fetch(join(baseUrl, api), {
     ...options,
     credentials: "include",
     headers: {

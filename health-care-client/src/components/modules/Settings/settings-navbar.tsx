@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import joinText from "@/utility/joinText";
+import join from "@/utility/joinText";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,7 +23,7 @@ export default function SettingsNavbar() {
       {settingsMenu.map((menu, i) => (
         <Link
           href={menu.href}
-          key={joinText("settings-menu-", i)}
+          key={join("settings-menu-", i)}
           className={cn(
             "flex-1 bg-accent text-center text-sm md:text-base md:font-medium p-1 md:p-2 whitespace-nowrap",
             {

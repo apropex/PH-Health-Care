@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
-import { Loader } from "lucide-react";
+import { Loader, LucideIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { ButtonTypes } from "./button.type";
 
 interface iProps extends ButtonTypes {
   isLoading: boolean;
   loadingText: string;
+  loadingIcon?: LucideIcon;
 }
 
 export default function LoadingButton({
@@ -19,6 +20,7 @@ export default function LoadingButton({
   iconRight = false,
   isLoading,
   loadingText,
+  loadingIcon: LoadingIcon,
   ...props
 }: iProps) {
   return (
@@ -32,7 +34,11 @@ export default function LoadingButton({
       {isLoading ? (
         <>
           <span>
-            <Loader className={cn("animate-spin", iconClass)} />
+            {LoadingIcon ? (
+              <LoadingIcon className={cn("animate-spin", iconClass)} />
+            ) : (
+              <Loader className={cn("animate-spin", iconClass)} />
+            )}
           </span>
           <span className="inline-block mt-1">{loadingText}</span>
         </>

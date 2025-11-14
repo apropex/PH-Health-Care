@@ -10,7 +10,7 @@ export interface iZodValidatorReturns {
   }[];
 }
 
-export const zodValidatorFn = <T>(
+export const zodErrorReturn = <T>(
   zodRes: z.ZodSafeParseResult<T>
 ): iZodValidatorReturns => ({
   success: false,

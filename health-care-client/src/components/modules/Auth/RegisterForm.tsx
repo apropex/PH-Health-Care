@@ -1,18 +1,12 @@
 "use client";
 
 import LoadingButton from "@/components/buttons/LoadingButton";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
+import ErrorFormDescription from "@/components/shared/ErrorFormDescription";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { cn } from "@/lib/utils";
 import { registerPatient } from "@/services/auth/registerPatient";
-import { getZodError } from "@/utility/zodValidatorFn";
 import { Image as ImageIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -97,11 +91,7 @@ export default function RegisterForm({ redirect }: { redirect?: string }) {
                 placeholder="Evil Rabbit"
                 required
               />
-              {getZodError(state, "name") && (
-                <FieldDescription className="text-destructive">
-                  {getZodError(state, "name")}
-                </FieldDescription>
-              )}
+              <ErrorFormDescription state={state} fieldName="name" />
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -112,11 +102,7 @@ export default function RegisterForm({ redirect }: { redirect?: string }) {
                 placeholder="rabbit@example.com"
                 required
               />
-              {getZodError(state, "email") && (
-                <FieldDescription className="text-destructive">
-                  {getZodError(state, "email")}
-                </FieldDescription>
-              )}
+              <ErrorFormDescription state={state} fieldName="email" />
             </Field>
             <Field className="md:col-span-2">
               <FieldLabel htmlFor="address">Address</FieldLabel>
@@ -131,20 +117,12 @@ export default function RegisterForm({ redirect }: { redirect?: string }) {
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Password id="password" name="password" required />
-              {getZodError(state, "password") && (
-                <FieldDescription className="text-destructive">
-                  {getZodError(state, "password")}
-                </FieldDescription>
-              )}
+              <ErrorFormDescription state={state} fieldName="password" />
             </Field>
             <Field>
               <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
               <Password id="confirmPassword" name="confirmPassword" required />
-              {getZodError(state, "confirmPassword") && (
-                <FieldDescription className="text-destructive">
-                  {getZodError(state, "confirmPassword")}
-                </FieldDescription>
-              )}
+              <ErrorFormDescription state={state} fieldName="confirmPassword" />
             </Field>
           </FieldGroup>
         </FieldSet>

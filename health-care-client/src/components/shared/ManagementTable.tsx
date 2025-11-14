@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import joinText from "@/utility/joinText";
+import join from "@/utility/joinText";
 import { CopyIcon, EditIcon, EllipsisVertical, EyeIcon, Trash2Icon } from "lucide-react";
 
 export interface iTableColumns<T> {
@@ -45,7 +45,7 @@ export default function ManagementTable<T>(props: iManagementTable<T>) {
           <TableRow>
             {(columns || []).map((col, i) => (
               <TableHead
-                key={joinText("management-table-head-", i)}
+                key={join("management-table-head-", i)}
                 className={col.className}
               >
                 {col.header}
@@ -75,7 +75,6 @@ export default function ManagementTable<T>(props: iManagementTable<T>) {
                         : String(item[col.accessor])}
                     </TableCell>
                   ))}
-
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

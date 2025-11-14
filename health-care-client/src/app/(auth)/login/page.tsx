@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import joinText from "@/utility/joinText";
+import join from "@/utility/joinText";
 import { Home } from "lucide-react";
 import Link from "next/link";
 
@@ -36,7 +36,7 @@ export default async function LoginPage({ searchParams }: iProps) {
           <LoginForm redirect={redirect} />
           <p className="my-3 text-muted-foreground text-sm text-center">
             Don&apos;t hve an account? Please{" "}
-            <Link href={joinText("/register", redirect ? `?redirect=${redirect}` : "")}>
+            <Link href={join("/register", redirect ? `?redirect=${redirect}` : "")}>
               <Button type="button" variant={"link"} className="p-0">
                 register
               </Button>

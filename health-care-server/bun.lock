@@ -4,6 +4,7 @@
     "": {
       "name": "ph-health-care-starter",
       "dependencies": {
+        "ph-health-care-starter": ".",
         "@prisma/client": "^6.16.3",
         "bcryptjs": "^3.0.2",
         "cloudinary": "^2.7.0",
@@ -354,6 +355,8 @@
     "pathe": ["pathe@2.0.3", "", {}, "sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w=="],
 
     "perfect-debounce": ["perfect-debounce@1.0.0", "", {}, "sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA=="],
+
+    "ph-health-care-starter": ["ph-health-care-starter@file:", { "dependencies": { "@prisma/client": "^6.16.3", "bcryptjs": "^3.0.2", "cloudinary": "^2.7.0", "cookie-parser": "^1.4.7", "cors": "^2.8.5", "date-fns": "^4.1.0", "dotenv": "^17.2.2", "express": "^5.1.0", "http-status": "^2.1.0", "http-status-codes": "^2.3.0", "jsonwebtoken": "^9.0.2", "multer": "^2.0.2", "node-cron": "^4.2.1", "openai": "^6.5.0", "stripe": "^19.1.0", "uuid": "^13.0.0", "zod": "^4.1.12" }, "devDependencies": { "@types/cookie-parser": "^1.4.9", "@types/cors": "^2.8.19", "@types/express": "^5.0.3", "@types/jsonwebtoken": "^9.0.10", "@types/multer": "^2.0.0", "@types/node": "^24.7.0", "prettier-plugin-prisma": "^5.0.0", "prisma": "^6.16.3", "ts-node-dev": "^2.0.0", "typescript": "^5.9.2" } }],
 
     "picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
 

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import mergeApi from "@/utility/merge-api";
-import parseJSONbody from "@/utility/parseJSONbody";
-import { iZodValidatorReturns, zodValidatorFn } from "@/utility/zodValidatorFn";
+import { _fetch } from "@/utility/_fetch";
+import { errorResponse } from "@/utility/errorResponse";
+import { makeFormData } from "@/utility/makeFormData";
+import { iZodValidatorReturns, zodErrorReturn } from "@/utility/zodValidatorFn";
 import z from "zod";
 import { login } from "./login";
 
@@ -53,9 +54,7 @@ export const registerPatient = async (
       confirmPassword,
     });
 
-    if (!zodRes.success) return zodValidatorFn(zodRes);
-
-    console.log("avatar", avatar);
+    if (!zodRes.success) return zodErrorReturn(zodRes);
 
     if (!avatar) return { success: false };
 
@@ -64,16 +63,11 @@ export const registerPatient = async (
       patient: { name, address },
     };
 
-    const newFormData = new FormData();
-    newFormData.append("file", avatar);
-    newFormData.append("data", JSON.stringify(registerData));
+    const newFormData = makeFormData(["data", registerData, "file", avatar]);
 
-    const response = await fetch(mergeApi("/patient/create-patient"), {
-      method: "POST",
+    const { success, message } = await _fetch.post("/patient/create-patient", {
       body: newFormData,
     });
-
-    const { success, message } = await parseJSONbody<null>(response);
 
     if (!success) return { success: false, message };
 
@@ -82,9 +76,6 @@ export const registerPatient = async (
     //
   } catch (error: any) {
     if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
-    return {
-      success: false,
-      message: error?.message || "Patient registration failed",
-    };
+    return errorResponse(error);
   }
 };
