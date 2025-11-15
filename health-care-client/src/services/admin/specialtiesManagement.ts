@@ -4,7 +4,7 @@ import { _fetch } from "@/utility/_fetch";
 import { errorResponse } from "@/utility/errorResponse";
 import join from "@/utility/joinText";
 import { makeFormData } from "@/utility/makeFormData";
-import { zodErrorReturn } from "@/utility/zodValidatorFn";
+import { zodParseResult } from "@/utility/zodValidatorFn";
 import z from "zod";
 
 const specialtySchema = z.object({
@@ -16,10 +16,10 @@ export async function createSpecialty(_: unknown, formData: FormData) {
     const rawData = { title: formData.get("title") };
     const file = formData.get("file") as File;
 
-    const payload = specialtySchema.safeParse(rawData);
-    if (!payload.success) return zodErrorReturn(payload);
+    const zodRes = zodParseResult(rawData, specialtySchema);
+    if (!zodRes.success) return zodRes;
 
-    const newFormData = makeFormData(["data", payload.data, "file", file]);
+    const newFormData = makeFormData(["data", zodRes.data, "file", file]);
 
     return await _fetch.post("/specialties", { body: newFormData });
   } catch (error) {

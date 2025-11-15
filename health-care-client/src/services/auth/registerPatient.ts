@@ -4,7 +4,7 @@
 import { _fetch } from "@/utility/_fetch";
 import { errorResponse } from "@/utility/errorResponse";
 import { makeFormData } from "@/utility/makeFormData";
-import { iZodValidatorReturns, zodErrorReturn } from "@/utility/zodValidatorFn";
+import { iZodValidatorReturns, zodParseResult } from "@/utility/zodValidatorFn";
 import z from "zod";
 import { login } from "./login";
 
@@ -46,15 +46,18 @@ export const registerPatient = async (
   const needPasswordChange = false;
 
   try {
-    const zodRes = registerValidation.safeParse({
-      name,
-      address,
-      email,
-      password,
-      confirmPassword,
-    });
+    const zodRes = zodParseResult(
+      {
+        name,
+        address,
+        email,
+        password,
+        confirmPassword,
+      },
+      registerValidation
+    );
 
-    if (!zodRes.success) return zodErrorReturn(zodRes);
+    if (!zodRes.success) return zodRes;
 
     if (!avatar) return { success: false };
 

@@ -12,7 +12,7 @@ import {
 import { errorResponse } from "@/utility/errorResponse";
 import mergeApi from "@/utility/merge-api";
 import parseJSONbody from "@/utility/parseJSONbody";
-import { iZodValidatorReturns, zodErrorReturn } from "@/utility/zodValidatorFn";
+import { iZodValidatorReturns, zodParseResult } from "@/utility/zodValidatorFn";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -36,12 +36,10 @@ export const login = async (_: any, formData: FormData): Promise<iLoginResponse>
 
     let redirectPath = formData.get("redirect")?.toString();
 
-    const validation = loginSchema.safeParse(rawData);
-    if (!validation.success) {
-      return zodErrorReturn(validation);
-    }
+    const zodRes = zodParseResult(rawData, loginSchema);
+    if (!zodRes.success) return zodRes;
 
-    const { email, password } = validation.data;
+    const { email, password } = zodRes.data as z.infer<typeof loginSchema>;
 
     const response = await fetch(mergeApi("/auth/login"), {
       method: "POST",

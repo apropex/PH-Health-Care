@@ -1,24 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import z from "zod";
+import { ZodObject } from "zod";
 
-export interface iZodValidatorReturns {
+export interface iZodValidatorReturns<T = unknown> {
   success: boolean;
   errors?: {
     field: PropertyKey;
     message: string;
   }[];
+  data?: T;
 }
 
-export const zodErrorReturn = <T>(
-  zodRes: z.ZodSafeParseResult<T>
-): iZodValidatorReturns => ({
-  success: false,
-  errors: zodRes?.error?.issues.map((issue: any) => ({
-    field: issue.path[0],
-    message: issue.message,
-  })),
-});
+export const zodParseResult = <T>(
+  payload: T,
+  zodObject: ZodObject
+): iZodValidatorReturns<T> => {
+  const zodRes = zodObject.safeParse(payload);
+
+  if (!zodRes.success)
+    return {
+      success: false,
+      errors: zodRes?.error?.issues.map((issue: any) => ({
+        field: issue.path[0],
+        message: issue.message,
+      })),
+    };
+
+  return zodRes as iZodValidatorReturns<T>;
+};
 
 export const getZodError = (state: any, fieldName: string): string | null => {
   if (state?.errors) {
