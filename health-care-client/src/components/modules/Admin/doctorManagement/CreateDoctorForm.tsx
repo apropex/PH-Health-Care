@@ -1,27 +1,28 @@
-//
-
 "use client";
 
 import AvatarUpload from "@/components/AvatarUpload";
-import DoctorForm from "@/components/forms/DoctorForm";
+import DoctorForm from "@/components/modules/Admin/doctorManagement/DoctorForm";
+import { createDoctor } from "@/services/admin/doctorManagement";
+import {
+  CreateDoctorSchema_client,
+  DoctorFormSchemaType_client,
+} from "@/zod/doctor-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  DoctorFormSchema,
-  DoctorFormSchemaType,
-} from "./form-validation/doctorForm.schema";
+import { toast } from "sonner";
 
 export default function CreateDoctorForm() {
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
 
-  const form = useForm<DoctorFormSchemaType>({
-    resolver: zodResolver(DoctorFormSchema),
+  const form = useForm<DoctorFormSchemaType_client>({
+    resolver: zodResolver(CreateDoctorSchema_client),
     defaultValues: {
       name: "",
       email: "",
       contactNumber: "",
-      needPasswordChange: "true",
+      needPasswordChange: true,
       gender: "MALE",
       password: "",
       address: "",
@@ -34,8 +35,16 @@ export default function CreateDoctorForm() {
     },
   });
 
-  function onSubmit(values: DoctorFormSchemaType) {
-    console.log(values);
+  async function onSubmit(values: DoctorFormSchemaType_client) {
+    if (!avatar) {
+      setAvatarError("Avatar is required");
+      return;
+    }
+    setAvatarError(null);
+    const result = await createDoctor(values, avatar);
+    if (result.success) {
+      toast.success(result.message);
+    } else toast.error(result.message);
   }
 
   return (
@@ -43,6 +52,9 @@ export default function CreateDoctorForm() {
       <h2 className="text-2xl md:text-4xl font-bold text-center my-4">Doctor-Form</h2>
       <div className="border-t border-muted mb-4" />
       <AvatarUpload setAvatar={setAvatar} />
+      {avatarError && !avatar && (
+        <p className="text-destructive text-sm">{avatarError}</p>
+      )}
       <DoctorForm form={form} onSubmit={onSubmit} />
     </div>
   );

@@ -65,10 +65,19 @@ const getDoctorById = catchAsync(async (req, res) => {
   });
 });
 
+const softDeleteDoctor = catchAsync(async (req, res) => {
+  await services.softDeleteDoctor(req.params.id);
+
+  _response(res, {
+    message: "Doctor deleted successfully!",
+  });
+});
+
 export default {
   createDoctor,
   getAllDoctors,
   updateDoctor,
   getAISuggestion,
   getDoctorById,
+  softDeleteDoctor,
 };

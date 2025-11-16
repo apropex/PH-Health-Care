@@ -51,14 +51,14 @@ export default function ManagementTable<T>(props: iManagementTable<T>) {
                 {col.header}
               </TableHead>
             ))}
-            {(data || []).length && <TableHead>Action</TableHead>}
+            <TableHead className="w-14">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {!(data || []).length ? (
             <TableRow>
               <TableCell
-                colSpan={(columns || []).length}
+                colSpan={(columns || []).length + 1}
                 className="text-center py-8 text-muted-foreground"
               >
                 {emptyMessage || "No data found"}
@@ -75,11 +75,11 @@ export default function ManagementTable<T>(props: iManagementTable<T>) {
                         : String(item[col.accessor])}
                     </TableCell>
                   ))}
-                  <TableCell>
+                  <TableCell className="w-full h-15 flex justify-end items-center">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button>
-                          <EllipsisVertical />
+                          <EllipsisVertical className="size-5" />
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-56" align="end">
@@ -87,27 +87,27 @@ export default function ManagementTable<T>(props: iManagementTable<T>) {
                         <DropdownMenuGroup>
                           <DropdownMenuItem
                             onClick={() =>
-                              navigator.clipboard.writeText((item as any).id)
+                              navigator.clipboard.writeText((item as any).id || "")
                             }
                           >
-                            <CopyIcon />
+                            <CopyIcon className="size-4" />
                             Copy Id
                           </DropdownMenuItem>
                           {onView && (
                             <DropdownMenuItem onClick={() => onView(item)}>
-                              <EyeIcon />
+                              <EyeIcon className="size-4" />
                               View
                             </DropdownMenuItem>
                           )}
                           {onEdit && (
                             <DropdownMenuItem onClick={() => onEdit(item)}>
-                              <EditIcon />
+                              <EditIcon className="size-4" />
                               Edit
                             </DropdownMenuItem>
                           )}
                           {onDelete && (
                             <DropdownMenuItem onClick={() => onDelete(item)}>
-                              <Trash2Icon />
+                              <Trash2Icon className="size-4" />
                               Delete
                             </DropdownMenuItem>
                           )}

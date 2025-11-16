@@ -27,6 +27,8 @@ export default async function fileUploader(
           console.warn("Warning: failed to delete local file:", err),
         );
 
+      console.log("cloudinary result", result);
+
       return result;
     } catch (error) {
       attempt++;

@@ -19,23 +19,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Gender } from "@/constants";
-import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { DoctorFormSchemaType_client } from "@/zod/doctor-validation";
+import { useState } from "react";
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
-import { DoctorFormSchemaType } from "./form-validation/doctorForm.schema";
 
 interface iProps {
-  form: UseFormReturn<DoctorFormSchemaType>;
-  onSubmit: SubmitHandler<DoctorFormSchemaType>;
+  form: UseFormReturn<DoctorFormSchemaType_client>;
+  onSubmit: SubmitHandler<DoctorFormSchemaType_client>;
+  isEdit?: boolean;
 }
 
-export default function DoctorForm({ form, onSubmit }: iProps) {
+export default function DoctorForm({ form, onSubmit, isEdit }: iProps) {
   const [needPasswordChange, setNeedPasswordChange] = useState<boolean>(true);
-
-  const needPasswordChangeValue = form.watch("needPasswordChange");
-
-  useEffect(() => {
-    setNeedPasswordChange(needPasswordChangeValue === "true");
-  }, [needPasswordChangeValue]);
 
   return (
     <Form {...form}>
@@ -107,51 +103,65 @@ export default function DoctorForm({ form, onSubmit }: iProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="needPasswordChange"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Need Password Change?</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select action" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="true">TRUE</SelectItem>
-                      <SelectItem value="false">FALSE</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className={`${isEdit && "hidden"}`}>
+              <FormField
+                control={form.control}
+                name="needPasswordChange"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Need Password Change?</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        setNeedPasswordChange(value === "true");
+                        field.onChange(value);
+                      }}
+                      defaultValue={String(field.value)}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select action" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="true">TRUE</SelectItem>
+                        <SelectItem value="false">FALSE</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <PasswordInput
-                      placeholder="Placeholder"
-                      {...field}
-                      disabled={needPasswordChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className={`${isEdit && "hidden"}`}>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder="Placeholder"
+                        {...field}
+                        disabled={needPasswordChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
               name="address"
               render={({ field }) => (
-                <FormItem className="md:col-span-3">
+                <FormItem
+                  className={cn("md:col-span-3", {
+                    "md:col-span-2": isEdit,
+                  })}
+                >
                   <FormLabel>Doctor Address</FormLabel>
                   <FormControl>
                     <Input placeholder="City, Town, Area..." {...field} />

@@ -1,4 +1,4 @@
-import { Doctor, Prisma, User } from "@prisma/client";
+import { Doctor, Prisma } from "@prisma/client";
 import httpStatus from "http-status";
 import { deleteImageFromCloud } from "../../../config/cloudinary/deleteImageFromCloud";
 import ApiError from "../../../error-handler/ApiError";
@@ -142,7 +142,6 @@ interface iSpecialties {
 }
 
 interface iUpdateDoctor {
-  user: User;
   doctor: Doctor;
   specialties: iSpecialties[];
 }
@@ -154,7 +153,7 @@ const updateDoctor = async (id: string, payload: iUpdateDoctor) => {
     include: { user: { select: { id: true } } },
   });
 
-  const { specialties, doctor: doctorData, user: userData } = payload;
+  const { specialties, doctor: doctorData } = payload;
 
   return await prisma.$transaction(async (trx) => {
     //
@@ -187,11 +186,6 @@ const updateDoctor = async (id: string, payload: iUpdateDoctor) => {
         });
       }
     }
-
-    await trx.user.update({
-      where: { id: user.id },
-      data: userData,
-    });
 
     const updatedDoctor = await trx.doctor.update({
       where: { id },
@@ -251,10 +245,18 @@ const getDoctorById = async (id: string) => {
   });
 };
 
+export const softDeleteDoctor = async (id: string) => {
+  await prisma.doctor.update({
+    where: { id },
+    data: { isDeleted: true },
+  });
+};
+
 export default {
   createDoctor,
   getAllDoctors,
   updateDoctor,
   getAISuggestion,
   getDoctorById,
+  softDeleteDoctor,
 };

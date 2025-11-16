@@ -1,14 +1,17 @@
 import { Gender } from "@/constants";
 import { z } from "zod";
 
-export const DoctorFormSchema = z.object({
+const commonSchema = z.object({
   name: z
     .string()
     .min(1, "Full name is required")
     .max(20, "Full name must be within 20 characters")
     .transform((val) => val.trim())
     .pipe(z.string().min(1, "Name cannot be empty or whitespaces only")),
+
   email: z.email({ error: "Email is required" }),
+
+  password: z.string().optional(),
 
   contactNumber: z
     .string()
@@ -16,10 +19,9 @@ export const DoctorFormSchema = z.object({
     .max(20, "Enter a valid phone number")
     .transform((val) => val.trim())
     .pipe(z.string().min(1, "Phone number cannot be empty or whitespaces only")),
-  needPasswordChange: z.string(),
 
   gender: z.enum(Object.values(Gender)),
-  password: z.string().optional(),
+
   address: z
     .string()
     .min(1, "Address is required")
@@ -33,9 +35,6 @@ export const DoctorFormSchema = z.object({
     .max(20, "Registration number must be within 20 characters")
     .transform((val) => val.trim())
     .pipe(z.string().min(1, "Registration number cannot be empty or whitespaces only")),
-
-  experience: z.coerce.number<number>({ error: "Registration no is required" }),
-  appointmentFee: z.coerce.number<number>({ error: "Appointment fee is required" }),
 
   qualification: z
     .string()
@@ -52,4 +51,27 @@ export const DoctorFormSchema = z.object({
   currentWorkingPlace: z.string().optional(),
 });
 
-export type DoctorFormSchemaType = z.infer<typeof DoctorFormSchema>;
+const onlyForClient = z.object({
+  needPasswordChange: z.coerce.boolean<boolean>({
+    error: "Need password change is required",
+  }),
+  experience: z.coerce.number<number>({ error: "Registration no is required" }),
+  appointmentFee: z.coerce.number<number>({ error: "Appointment fee is required" }),
+});
+
+const onlyForServer = z.object({
+  needPasswordChange: z.boolean({ error: "Enter valid password change type" }),
+  experience: z.number({ error: "Registration no is required" }),
+  appointmentFee: z.number({ error: "Appointment fee is required" }),
+});
+
+export const CreateDoctorSchema_client = commonSchema.extend(onlyForClient.shape);
+export const CreateDoctorSchema_server = commonSchema.extend(onlyForServer.shape);
+
+export const UpdateDoctorSchema_client = CreateDoctorSchema_client.omit({
+  password: true,
+});
+
+export type DoctorFormSchemaType_client = z.infer<typeof CreateDoctorSchema_client>;
+export type DoctorFormSchemaType_server = z.infer<typeof CreateDoctorSchema_server>;
+export type UpdateDoctorSchemaType = z.infer<typeof UpdateDoctorSchema_client>;

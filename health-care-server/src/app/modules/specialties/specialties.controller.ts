@@ -6,12 +6,16 @@ import _response from "../../shared/sendResponse";
 import services from "./specialties.service";
 
 const createSpecialty = catchAsync(async (req: Request, res: Response) => {
+  const payload = req.body;
   if (req.file) {
     const secure_url = (await fileUploader(req.file))?.secure_url;
-    if (secure_url) req.body.icon = secure_url;
+    if (secure_url) payload.icon = secure_url;
   }
 
-  const result = await services.createSpecialty(req.body);
+  console.log("req.file :", req.file);
+  console.log("req.body :", req.body);
+
+  const result = await services.createSpecialty(payload);
 
   _response(res, {
     statusCode: httpStatus.CREATED,
