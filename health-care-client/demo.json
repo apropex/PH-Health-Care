@@ -1,0 +1,41 @@
+{
+  "id": "09460843-ffaa-4438-a375-8ac90d3a84fb",
+  "name": "Nusrat Jahan",
+  "email": "nusrat@gmail.com",
+  "profilePhoto": "https://res.cloudinary.com/djm20ovuw/image/upload/v1763383688/ph-health-care/uploads/dkbnmchgpouzgausgdi2.jpg",
+  "contactNumber": "01524633577",
+  "address": "Home city",
+  "registrationNumber": "S54DF5S4D6-5445MB",
+  "experience": 2,
+  "gender": "FEMALE",
+  "appointmentFee": 750,
+  "qualification": "MBBS",
+  "currentWorkingPlace": "Home city town",
+  "designation": "MBBS",
+  "averageRating": 0,
+  "isDeleted": false,
+  "createdAt": "2025-11-17T12:48:29.119Z",
+  "updatedAt": "2025-11-17T14:29:54.658Z",
+  "doctorSpecialties": [
+    {
+      "specialtiesId": "12ae18d5-9f7f-432c-b26b-f0bf49e95882",
+      "doctorId": "09460843-ffaa-4438-a375-8ac90d3a84fb",
+      "specialties": {
+        "id": "12ae18d5-9f7f-432c-b26b-f0bf49e95882",
+        "title": "Cardiology",
+        "icon": "https://res.cloudinary.com/djm20ovuw/image/upload/v1763387522/ph-health-care/uploads/hjpi0vurwcwsovfsim7c.png"
+      }
+    },
+    {
+      "specialtiesId": "fed7b95a-6909-4d46-818e-7ef71541846c",
+      "doctorId": "09460843-ffaa-4438-a375-8ac90d3a84fb",
+      "specialties": {
+        "id": "fed7b95a-6909-4d46-818e-7ef71541846c",
+        "title": "Cardiothoracic Surgery",
+        "icon": "https://res.cloudinary.com/djm20ovuw/image/upload/v1763388159/ph-health-care/uploads/qop2lhzq4pkeo4n0jg00.png"
+      }
+    }
+  ],
+  "doctorSchedules": [],
+  "reviews": []
+}

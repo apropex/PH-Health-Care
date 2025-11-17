@@ -1,3 +1,4 @@
+"use client";
 import {
   Select,
   SelectContent,
@@ -11,14 +12,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
 interface SelectFilterProps {
-  paramName: string;
+  paramName?: string;
   placeholder?: string;
   options: { label: string; value: string }[];
 }
 
 export default function SelectFilter({
-  paramName,
-  placeholder,
+  paramName = "specialty",
+  placeholder = "Select a specialty",
   options,
 }: SelectFilterProps) {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function SelectFilter({
 
   return (
     <Select value={currentValue} onValueChange={handleChange} disabled={isPending}>
-      <SelectTrigger>
+      <SelectTrigger className="w-auto min-w-52">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

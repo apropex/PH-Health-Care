@@ -1,35 +1,43 @@
+import CustomCollapsible from "@/components/CustomCollapsible";
 import { iTableColumns } from "@/components/shared/ManagementTable";
+import UserInfoCell from "@/components/shared/UserInfoCell";
+import UserStatusCell from "@/components/shared/UserStatusCell";
 import { iDoctor } from "@/interfaces/doctor.interfaces";
-import Image from "next/image";
+import formatDate from "@/utility/formatDate";
+import join from "@/utility/joinText";
+import { Star } from "lucide-react";
 
 export const doctorColumns: iTableColumns<iDoctor>[] = [
   {
-    header: "Avatar",
+    header: "Doctor",
     accessor: (doctor) => (
-      <Image
-        src={doctor.profilePhoto}
-        alt={doctor.name}
-        width={40}
-        height={40}
-        className="object-cover rounded-full"
+      <UserInfoCell
+        name={doctor.name}
+        email={doctor.email}
+        avatar={doctor.profilePhoto}
       />
     ),
   },
   {
-    header: "Name",
-    accessor: ({ name }) => name,
+    header: "Designation",
+    accessor: (doctor) => (
+      <div className="flex flex-col gap-0.5">
+        <span className="text-sm font-medium">{doctor.designation}</span>
+        <span className="text-xs text-foreground/70">{doctor.qualification}</span>
+      </div>
+    ),
   },
   {
-    header: "Gender",
-    accessor: ({ gender }) => gender,
-  },
-  {
-    header: "Email",
-    accessor: ({ email }) => email,
-  },
-  {
-    header: "Phone",
-    accessor: ({ contactNumber }) => contactNumber,
+    header: "Specialties",
+    accessor: (doctor) => (
+      <CustomCollapsible
+        itemClass="border-0 border-t rounded-none px-1.5 py-1"
+        buttonTitle="Specialties"
+        items={
+          doctor.doctorSpecialties?.map(({ specialties }) => specialties.title) || []
+        }
+      />
+    ),
   },
   {
     header: "REG. No.",
@@ -40,7 +48,28 @@ export const doctorColumns: iTableColumns<iDoctor>[] = [
     accessor: ({ experience: e }) => (e > 0 ? `${e} Years` : `${e} Year`),
   },
   {
-    header: "REG. No.",
-    accessor: ({ appointmentFee }) => appointmentFee,
+    header: "Fee",
+    accessor: ({ appointmentFee }) => join(appointmentFee, " /-"),
+  },
+  {
+    header: "Ratting",
+    accessor: ({ averageRating }) => (
+      <div className="flex items-center gap-1">
+        <Star className="size-4 fill-yellow-400 text-yellow-400" />
+        <span className="text-sm font-medium inline-block mt-0.5">
+          {(averageRating || 0).toFixed(1)}
+        </span>
+      </div>
+    ),
+  },
+  {
+    header: "Joined",
+    accessor: ({ createdAt }) => formatDate(createdAt),
+  },
+  {
+    header: "Status",
+    accessor: ({ isDeleted }) => (
+      <UserStatusCell status={isDeleted ? "DELETED" : "ACTIVE"} />
+    ),
   },
 ];

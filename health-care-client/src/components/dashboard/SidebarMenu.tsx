@@ -29,7 +29,7 @@ export default function SidebarMenuComponent({ role }: { role: tUserRole }) {
             <SidebarMenu>
               {routes.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                  <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -60,7 +60,7 @@ export default function SidebarMenuComponent({ role }: { role: tUserRole }) {
                 <SidebarMenu>
                   {group.items.map((item, i) => (
                     <SidebarMenuItem key={join("collapsible-item-", i)}>
-                      <SidebarMenuButton asChild isActive={pathname === item.url}>
+                      <SidebarMenuButton asChild isActive={pathname.startsWith(item.url)}>
                         <Link href={item.url}>
                           <item.icon /> {item.title}
                         </Link>

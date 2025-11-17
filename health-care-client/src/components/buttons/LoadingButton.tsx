@@ -25,7 +25,7 @@ export default function LoadingButton({
 }: iProps) {
   return (
     <Button
-      className={cn(className)}
+      className={cn("hover:translate-y-0.5 active:scale-95", className)}
       variant={variant}
       size={size}
       asChild={asChild}

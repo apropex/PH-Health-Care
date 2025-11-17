@@ -20,12 +20,6 @@ export default function DoctorTable({ doctors }: DoctorTableProps) {
   const [deletingDoctor, setDeleteDoctor] = useState<iDoctor | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
 
-  const handleRefresh = () => {
-    startTransition(() => {
-      router.refresh();
-    });
-  };
-
   const confirmDelete = async () => {
     if (!deletingDoctor) return;
     setDeleting(true);
@@ -35,7 +29,9 @@ export default function DoctorTable({ doctors }: DoctorTableProps) {
     if (result.success) {
       toast.success(result.message || "Doctor deleted successfully!");
       setDeleteDoctor(null);
-      handleRefresh();
+      startTransition(() => {
+        router.refresh();
+      });
     } else toast.error(result.message || "Failed to delete doctor");
   };
 
@@ -47,6 +43,9 @@ export default function DoctorTable({ doctors }: DoctorTableProps) {
         onDelete={setDeleteDoctor}
         onEdit={({ id }) =>
           router.push(`/admin/dashboard/manage-doctors/update-doctor?id=${id}`)
+        }
+        onView={({ id }) =>
+          router.push(`/admin/dashboard/manage-doctors/view-doctor?id=${id}`)
         }
         rowKey={(specialty) => specialty.id}
         emptyMessage="No doctors found"

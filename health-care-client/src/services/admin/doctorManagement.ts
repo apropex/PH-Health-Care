@@ -1,6 +1,7 @@
 "use server";
 
 import { UserRole } from "@/constants";
+import { iResponse } from "@/interfaces";
 import { iDoctor } from "@/interfaces/doctor.interfaces";
 import { _fetch } from "@/utility/_fetch";
 import { errorResponse } from "@/utility/errorResponse";
@@ -103,7 +104,7 @@ export const updateDoctor = async (
 };
 
 // ============ DELETE DOCTOR =============
-export const softDeleteDoctor = async (id: string) => {
+export const softDeleteDoctor = async (id: string): Promise<iResponse<unknown>> => {
   try {
     return await _fetch.delete(join("/doctor/soft-delete/", id));
   } catch (error) {
