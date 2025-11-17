@@ -2,6 +2,7 @@
 
 import AvatarUpload from "@/components/AvatarUpload";
 import DoctorForm from "@/components/modules/Admin/doctorManagement/DoctorForm";
+import { iSpecialty } from "@/interfaces/doctor.interfaces";
 import { createDoctor } from "@/services/admin/doctorManagement";
 import {
   CreateDoctorSchema_client,
@@ -12,9 +13,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-export default function CreateDoctorForm() {
+export default function CreateDoctorForm({ specialties }: { specialties: iSpecialty[] }) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [specialtiesIds, setSpecialtiesIds] = useState<string[]>([]);
 
   const form = useForm<DoctorFormSchemaType_client>({
     resolver: zodResolver(CreateDoctorSchema_client),
@@ -40,8 +42,11 @@ export default function CreateDoctorForm() {
       setAvatarError("Avatar is required");
       return;
     }
+
+    // TODO: throw an error is specialtiesIds is []
+
     setAvatarError(null);
-    const result = await createDoctor(values, avatar);
+    const result = await createDoctor(values, specialtiesIds, avatar);
     if (result.success) {
       toast.success(result.message);
     } else toast.error(result.message);
@@ -55,7 +60,12 @@ export default function CreateDoctorForm() {
       {avatarError && !avatar && (
         <p className="text-destructive text-sm">{avatarError}</p>
       )}
-      <DoctorForm form={form} onSubmit={onSubmit} />
+      <DoctorForm
+        form={form}
+        onSubmit={onSubmit}
+        setSpecialtiesIds={setSpecialtiesIds}
+        specialties={specialties}
+      />
     </div>
   );
 }

@@ -1,7 +1,9 @@
 //
 
 import CustomButton from "@/components/buttons/CustomButton";
-import CreateDoctorForm from "@/components/modules/Admin/doctorManagement/CreateDoctorForm";
+import UpdateDoctorForm from "@/components/modules/Admin/doctorManagement/UpdateDoctorForm";
+import { iDoctor } from "@/interfaces/doctor.interfaces";
+import { getDoctorById } from "@/services/admin/doctorManagement";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -58,7 +60,17 @@ const specialties = [
   },
 ];
 
-export default function CreateDoctorDashboard() {
+interface UpdateDoctorDashboardProps {
+  searchParams?: Promise<{ id?: string }>;
+}
+
+export default async function UpdateDoctorDashboard({
+  searchParams,
+}: UpdateDoctorDashboardProps) {
+  const id = (await searchParams)?.id;
+
+  const result = await getDoctorById(id!);
+
   return (
     <div className="">
       <Link href={"/admin/dashboard/manage-doctors"}>
@@ -66,7 +78,12 @@ export default function CreateDoctorDashboard() {
           Back
         </CustomButton>
       </Link>
-      <CreateDoctorForm specialties={specialties} />
+
+      {result.success ? (
+        <UpdateDoctorForm doctor={result.data as iDoctor} specialties={specialties} />
+      ) : (
+        <p>{result.message}</p>
+      )}
     </div>
   );
 }

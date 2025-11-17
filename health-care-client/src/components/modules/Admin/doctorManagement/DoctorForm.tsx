@@ -1,6 +1,7 @@
 "use client";
 
 import { PasswordInput } from "@/components/custom-ui/password-input";
+import CustomMultiSelect from "@/components/CustomMultiSelect";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -19,18 +21,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Gender } from "@/constants";
+import { iSpecialty } from "@/interfaces/doctor.interfaces";
 import { cn } from "@/lib/utils";
 import { DoctorFormSchemaType_client } from "@/zod/doctor-validation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
 
 interface iProps {
   form: UseFormReturn<DoctorFormSchemaType_client>;
   onSubmit: SubmitHandler<DoctorFormSchemaType_client>;
   isEdit?: boolean;
+  setSpecialtiesIds: Dispatch<SetStateAction<string[]>>;
+  specialties: iSpecialty[];
 }
 
-export default function DoctorForm({ form, onSubmit, isEdit }: iProps) {
+export default function DoctorForm({
+  form,
+  onSubmit,
+  isEdit,
+  setSpecialtiesIds,
+  specialties,
+}: iProps) {
   const [needPasswordChange, setNeedPasswordChange] = useState<boolean>(true);
 
   return (
@@ -260,9 +271,16 @@ export default function DoctorForm({ form, onSubmit, isEdit }: iProps) {
               )}
             />
           </div>
+
+          <Label className="mt-8 text-base">Specialties</Label>
+          <CustomMultiSelect
+            setSelectedItems={setSpecialtiesIds}
+            defaultItems={specialties}
+            isEdit={isEdit}
+          />
         </div>
 
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-4 mt-8">
           <Button type="submit" className="w-full max-w-sm">
             Submit
           </Button>

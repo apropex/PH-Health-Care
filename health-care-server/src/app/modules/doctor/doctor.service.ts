@@ -20,7 +20,7 @@ import { iCreateDoctor } from "./doctor.interface";
 type WhereInput = Prisma.DoctorWhereInput;
 
 // create doctor
-const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
+const createDoctor = async ({ doctor, user, specialties }: iCreateDoctor) => {
   const hashed = await buildHash(user.password);
 
   const userExists = !!(await prisma.user.count({
@@ -38,7 +38,7 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
       },
     });
 
-    return await trx.doctor.create({
+    const newDoctor = await trx.doctor.create({
       data: {
         ...doctor,
         user: {
@@ -48,6 +48,17 @@ const createDoctor = async ({ doctor, user }: iCreateDoctor) => {
         },
       },
     });
+
+    for (const specialty of specialties) {
+      await trx.doctorSpecialties.create({
+        data: {
+          specialtiesId: specialty,
+          doctorId: newDoctor.id,
+        },
+      });
+    }
+
+    return newDoctor;
   });
 };
 
@@ -136,21 +147,18 @@ received data
 
 */
 
-interface iSpecialties {
-  id: string;
-  isDeleted: boolean;
-}
-
 interface iUpdateDoctor {
   doctor: Doctor;
-  specialties: iSpecialties[];
+  specialties: {
+    addIds: string[];
+    deleteIds: string[];
+  };
 }
 
 const updateDoctor = async (id: string, payload: iUpdateDoctor) => {
   //
-  const { profilePhoto, user } = await prisma.doctor.findFirstOrThrow({
+  const { profilePhoto } = await prisma.doctor.findFirstOrThrow({
     where: { id },
-    include: { user: { select: { id: true } } },
   });
 
   const { specialties, doctor: doctorData } = payload;
@@ -158,33 +166,24 @@ const updateDoctor = async (id: string, payload: iUpdateDoctor) => {
   return await prisma.$transaction(async (trx) => {
     //
 
-    if (specialties && Array.isArray(specialties) && specialties.length) {
-      const deleteSpecialties = specialties.filter(
-        ({ isDeleted }) => isDeleted,
-      );
-      const createSpecialties = specialties.filter(
-        ({ isDeleted }) => !isDeleted,
-      );
-
-      for (const specialty of deleteSpecialties) {
-        await trx.doctorSpecialties.delete({
-          where: {
-            specialtiesId_doctorId: {
-              specialtiesId: specialty.id,
-              doctorId: id,
-            },
-          },
-        });
-      }
-
-      for (const specialty of createSpecialties) {
-        await trx.doctorSpecialties.create({
-          data: {
-            specialtiesId: specialty.id,
+    for (const specialty of specialties.deleteIds) {
+      await trx.doctorSpecialties.delete({
+        where: {
+          specialtiesId_doctorId: {
+            specialtiesId: specialty,
             doctorId: id,
           },
-        });
-      }
+        },
+      });
+    }
+
+    for (const specialty of specialties.addIds) {
+      await trx.doctorSpecialties.create({
+        data: {
+          specialtiesId: specialty,
+          doctorId: id,
+        },
+      });
     }
 
     const updatedDoctor = await trx.doctor.update({

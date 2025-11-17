@@ -2,7 +2,7 @@
 
 import AvatarUpload from "@/components/AvatarUpload";
 import DoctorForm from "@/components/modules/Admin/doctorManagement/DoctorForm";
-import { iDoctor } from "@/interfaces/doctor.interfaces";
+import { iDoctor, iSpecialty } from "@/interfaces/doctor.interfaces";
 import { updateDoctor } from "@/services/admin/doctorManagement";
 import {
   CreateDoctorSchema_client,
@@ -15,28 +15,53 @@ import { toast } from "sonner";
 
 interface iProps {
   doctor: iDoctor;
+  specialties: iSpecialty[];
 }
 
-export default function UpdateDoctorForm({ doctor }: iProps) {
+export function generateDefaultItems<T extends { id: string }>(
+  allItems: T[],
+  selectedIds: string[]
+) {
+  return allItems.map((item) => ({
+    ...item,
+    selected: selectedIds.includes(item.id),
+  }));
+}
+
+export function diffSelections(previous: string[], current: string[]) {
+  const prevSet = new Set(previous);
+  const currSet = new Set(current);
+
+  const add = [...currSet].filter((id) => !prevSet.has(id));
+  const remove = [...prevSet].filter((id) => !currSet.has(id));
+
+  return { add, remove };
+}
+
+export default function UpdateDoctorForm({ doctor, specialties }: iProps) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [specialtiesIds, setSpecialtiesIds] = useState<string[]>([]);
+
+  const previousIds = doctor ? doctor.doctorSpecialties.specialties.map((s) => s.id) : [];
+  const defaultItems = generateDefaultItems(specialties, previousIds);
 
   const form = useForm<DoctorFormSchemaType_client>({
     resolver: zodResolver(CreateDoctorSchema_client),
     defaultValues: {
-      name: doctor.name,
-      email: doctor.email,
-      contactNumber: doctor.contactNumber,
+      name: doctor.name || "",
+      email: doctor.email || "",
+      contactNumber: doctor.contactNumber || "",
       needPasswordChange: true,
-      gender: doctor.gender,
+      gender: doctor.gender || "",
       password: "",
-      address: doctor.address,
-      registrationNumber: doctor.registrationNumber,
-      experience: doctor.experience,
-      appointmentFee: doctor.appointmentFee,
-      qualification: doctor.qualification,
-      designation: doctor.designation,
-      currentWorkingPlace: doctor.currentWorkingPlace,
+      address: doctor.address || "",
+      registrationNumber: doctor.registrationNumber || "",
+      experience: doctor.experience || 0,
+      appointmentFee: doctor.appointmentFee || 0,
+      qualification: doctor.qualification || "",
+      designation: doctor.designation || "",
+      currentWorkingPlace: doctor.currentWorkingPlace || "",
     },
   });
 
@@ -45,8 +70,19 @@ export default function UpdateDoctorForm({ doctor }: iProps) {
       setAvatarError("Avatar is required");
       return;
     }
+
+    const { add: addIds, remove: deleteIds } = diffSelections(
+      previousIds,
+      specialtiesIds
+    );
+
     setAvatarError(null);
-    const result = await updateDoctor(doctor.id, values, avatar ?? undefined);
+    const result = await updateDoctor(
+      doctor.id,
+      values,
+      { addIds, deleteIds },
+      avatar ?? undefined
+    );
     if (result.success) {
       toast.success(result.message);
     } else toast.error(result.message);
@@ -60,7 +96,13 @@ export default function UpdateDoctorForm({ doctor }: iProps) {
       {avatarError && !avatar && (
         <p className="text-destructive text-sm">{avatarError}</p>
       )}
-      <DoctorForm form={form} onSubmit={onSubmit} />
+      <DoctorForm
+        form={form}
+        onSubmit={onSubmit}
+        setSpecialtiesIds={setSpecialtiesIds}
+        specialties={defaultItems}
+        isEdit={true}
+      />
     </div>
   );
 }

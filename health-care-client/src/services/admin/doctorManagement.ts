@@ -13,7 +13,11 @@ import {
 } from "@/zod/doctor-validation";
 
 // ============ CREATE DOCTOR =============
-export const createDoctor = async (data: DoctorFormSchemaType_client, file: File) => {
+export const createDoctor = async (
+  data: DoctorFormSchemaType_client,
+  specialties: string[],
+  file: File
+) => {
   try {
     if (!file) return errorResponse({ message: "Doctor image is required" });
 
@@ -38,7 +42,7 @@ export const createDoctor = async (data: DoctorFormSchemaType_client, file: File
       designation: payload.designation,
     };
 
-    const formData = makeFormData(["data", { user, doctor }, "file", file]);
+    const formData = makeFormData(["data", { user, doctor, specialties }, "file", file]);
 
     return await _fetch.post<iDoctor>("/doctor/create-doctor", { body: formData });
   } catch (error) {
@@ -68,8 +72,11 @@ export const getDoctorById = async (id: string) => {
 export const updateDoctor = async (
   id: string,
   data: DoctorFormSchemaType_client,
+  specialties: { addIds: string[]; deleteIds: string[] },
   file?: File
 ) => {
+  if (!id) return errorResponse({ message: "Doctor id not found" });
+
   try {
     const payload = await UpdateDoctorSchema_client.parseAsync(data);
 
@@ -87,7 +94,7 @@ export const updateDoctor = async (
       designation: payload.designation,
     };
 
-    const formData = makeFormData(["data", { doctor, specialties: [] }, "file", file]);
+    const formData = makeFormData(["data", { doctor, specialties }, "file", file]);
 
     return await _fetch.patch(join("/doctor/", id), { body: formData });
   } catch (error) {

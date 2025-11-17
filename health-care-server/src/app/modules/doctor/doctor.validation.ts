@@ -24,18 +24,17 @@ const doctorSchema = z.object({
 export const CreateDoctorSchema: ZodObject = z.object({
   user: userSchema,
   doctor: doctorSchema,
-});
-
-const specialtySchema = z.object({
-  id: z.string({ error: defaultZodError }),
-  isDelete: z.boolean({ error: defaultZodError }),
+  specialties: z.array(z.string()),
 });
 
 export const UpdateDoctorSchema = z.object({
   doctor: doctorSchema.extend(
     z.object({ email: z.string({ error: defaultZodError }) }).shape,
   ),
-  specialties: z.array(specialtySchema).optional(),
+  specialties: z.object({
+    addIds: z.array(z.string()),
+    deleteIds: z.array(z.string()),
+  }),
 });
 
 /**
