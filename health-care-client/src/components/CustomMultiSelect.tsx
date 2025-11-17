@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
 export interface MultiItem {
   id: string;
@@ -22,18 +22,13 @@ export default function CustomMultiSelect<T extends MultiItem>({
   isEdit = false,
   className,
 }: CustomMultiSelectProps<T>) {
-  const [items, setItems] = useState<T[]>([]);
-
-  // initialize or update default items
-  useEffect(() => {
-    (() => {
-      if (isEdit) {
-        setItems(defaultItems);
-      } else {
-        setItems(defaultItems.map((item) => ({ ...item, selected: false })));
-      }
-    })();
+  const normalizedDefaultItems = useMemo(() => {
+    return isEdit
+      ? defaultItems
+      : defaultItems.map((item) => ({ ...item, selected: false }));
   }, [defaultItems, isEdit]);
+
+  const [items, setItems] = useState(normalizedDefaultItems);
 
   // sync selected IDs to parent
   useEffect(() => {

@@ -5,9 +5,7 @@ import LoadingButton from "@/components/buttons/LoadingButton";
 import ErrorFormDescription from "@/components/shared/ErrorFormDescription";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,7 +16,7 @@ import { iChildren } from "@/interfaces";
 import { createSpecialty } from "@/services/admin/specialtiesManagement";
 import { ImageIcon, Save, X, XIcon } from "lucide-react";
 import Image from "next/image";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { MouseEvent, useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface SpecialtiesFormProps extends iChildren {
@@ -26,6 +24,8 @@ interface SpecialtiesFormProps extends iChildren {
   onClose: (open: boolean) => void;
   onSuccess: () => void;
 }
+
+type E = MouseEvent<HTMLButtonElement, globalThis.MouseEvent>;
 
 export default function SpecialtyFormDialog({
   children,
@@ -44,16 +44,27 @@ export default function SpecialtyFormDialog({
       if (state && !state.success && state.message) {
         if (!image) setImageError("Specialty icon is required");
         toast.error(state.message);
-      }
-      if (state && state.success) {
+      } else if (state && state.success) {
         toast.success("Specialty created successfully!");
         onSuccess();
         onClose(false);
         setImage(null);
-        if (fileInputRef.current) fileInputRef.current.value = "";
+        // if (fileInputRef.current) fileInputRef.current.value = "";
       }
     })();
   }, [state, image, onSuccess, onClose]);
+
+  const handleDeleteImage = (e: E) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setImage(null);
+  };
+  const handleClickImage = (e: E) => {
+    e.preventDefault();
+    e.stopPropagation();
+    fileInputRef.current?.click();
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -67,12 +78,7 @@ export default function SpecialtyFormDialog({
             <div className="relative">
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (fileInputRef.current) fileInputRef.current.value = "";
-                  setImage(null);
-                }}
+                onClick={handleDeleteImage}
                 className="absolute top-3 -right-12 bg-destructive text-white rounded-xs p-px pointer-events-auto"
               >
                 <X size={16} />
@@ -91,12 +97,9 @@ export default function SpecialtyFormDialog({
               />
             ) : (
               <button
+                type="button"
                 className="cursor-pointer size-20 rounded-full flex items-center justify-center"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  fileInputRef.current?.click();
-                }}
+                onClick={handleClickImage}
               >
                 <ImageIcon />
               </button>
@@ -107,7 +110,7 @@ export default function SpecialtyFormDialog({
           {imageError && <p className="text-xs text-destructive">{imageError}</p>}
         </div>
 
-        <form action={action}>
+        <form action={action} id="create_specialty_form">
           <input
             ref={fileInputRef}
             type="file"
@@ -127,23 +130,24 @@ export default function SpecialtyFormDialog({
             />
             <ErrorFormDescription state={state} fieldName="title" />
           </Field>
-          <DialogFooter className="mt-8">
-            <DialogClose asChild>
-              <CustomButton size="sm" variant="outline" icon={XIcon}>
-                Cancel
-              </CustomButton>
-            </DialogClose>
-            <LoadingButton
-              size="sm"
-              isLoading={isPending}
-              loadingText="Submitting..."
-              type="submit"
-              icon={Save}
-            >
-              Submit
-            </LoadingButton>
-          </DialogFooter>
         </form>
+
+        <div className="flex items-center justify-end gap-3">
+          <CustomButton size="sm" variant="outline" icon={XIcon} className="h-9">
+            Cancel
+          </CustomButton>
+
+          <LoadingButton
+            form="create_specialty_form"
+            size="sm"
+            isLoading={isPending}
+            loadingText="Submitting..."
+            type="submit"
+            icon={Save}
+          >
+            Submit
+          </LoadingButton>
+        </div>
       </DialogContent>
     </Dialog>
   );

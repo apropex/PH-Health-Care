@@ -19,9 +19,12 @@ export interface iDoctor {
   createdAt: string;
   updatedAt: string;
 
-  doctorSpecialties: {
-    specialties: iSpecialty[];
-  };
+  doctorSpecialties: iDoctorSpecialties[];
+}
+
+export interface iDoctorSpecialties {
+  specialtiesId: string;
+  specialties: iSpecialty;
 }
 
 export interface iSpecialty {

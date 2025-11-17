@@ -9,6 +9,7 @@ import {
   DoctorFormSchemaType_client,
 } from "@/zod/doctor-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,9 +23,9 @@ export function generateDefaultItems<T extends { id: string }>(
   allItems: T[],
   selectedIds: string[]
 ) {
-  return allItems.map((item) => ({
+  return allItems?.map((item) => ({
     ...item,
-    selected: selectedIds.includes(item.id),
+    selected: selectedIds?.includes(item?.id),
   }));
 }
 
@@ -38,12 +39,14 @@ export function diffSelections(previous: string[], current: string[]) {
   return { add, remove };
 }
 
-export default function UpdateDoctorForm({ doctor, specialties }: iProps) {
+export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [specialtiesIds, setSpecialtiesIds] = useState<string[]>([]);
 
-  const previousIds = doctor ? doctor.doctorSpecialties.specialties.map((s) => s.id) : [];
+  const router = useRouter();
+
+  const previousIds = doctor ? doctor.doctorSpecialties?.map((s) => s.specialtiesId) : [];
   const defaultItems = generateDefaultItems(specialties, previousIds);
 
   const form = useForm<DoctorFormSchemaType_client>({
@@ -84,6 +87,7 @@ export default function UpdateDoctorForm({ doctor, specialties }: iProps) {
       avatar ?? undefined
     );
     if (result.success) {
+      router.push("/admin/dashboard/manage-doctors");
       toast.success(result.message);
     } else toast.error(result.message);
   }

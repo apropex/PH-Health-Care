@@ -32,7 +32,9 @@ export default async function RootLayout({ children }: Readonly<iChildren>) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased custom-scrollbar`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

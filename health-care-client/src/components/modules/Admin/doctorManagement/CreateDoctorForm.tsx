@@ -9,6 +9,7 @@ import {
   DoctorFormSchemaType_client,
 } from "@/zod/doctor-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,6 +18,8 @@ export default function CreateDoctorForm({ specialties }: { specialties: iSpecia
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [specialtiesIds, setSpecialtiesIds] = useState<string[]>([]);
+
+  const router = useRouter();
 
   const form = useForm<DoctorFormSchemaType_client>({
     resolver: zodResolver(CreateDoctorSchema_client),
@@ -48,6 +51,7 @@ export default function CreateDoctorForm({ specialties }: { specialties: iSpecia
     setAvatarError(null);
     const result = await createDoctor(values, specialtiesIds, avatar);
     if (result.success) {
+      router.push("/admin/dashboard/manage-doctors");
       toast.success(result.message);
     } else toast.error(result.message);
   }

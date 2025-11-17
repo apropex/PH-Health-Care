@@ -5,7 +5,7 @@ import { CircleUserRoundIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface iProps {
   setAvatar: Dispatch<SetStateAction<File | null>>;
@@ -13,11 +13,12 @@ interface iProps {
 }
 
 export default function AvatarUpload({ setAvatar, preview }: iProps) {
+  const [isPreview, setIsPreview] = useState<string | null | undefined>(preview);
   const [{ files }, { removeFile, openFileDialog, getInputProps }] = useFileUpload({
     accept: "image/*",
   });
 
-  const previewUrl = files[0]?.preview || preview || null;
+  const previewUrl = files[0]?.preview || isPreview || null;
   const fileName = files[0]?.file.name || null;
 
   useEffect(() => {
@@ -51,7 +52,10 @@ export default function AvatarUpload({ setAvatar, preview }: iProps) {
         </Button>
         {previewUrl && (
           <Button
-            onClick={() => removeFile(files[0]?.id)}
+            onClick={() => {
+              setIsPreview(null);
+              removeFile(files[0]?.id);
+            }}
             size="icon"
             className="absolute -top-2 -right-2 size-6 rounded-full border-2 border-background shadow-none focus-visible:border-background"
             aria-label="Remove image"
