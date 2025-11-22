@@ -1,9 +1,12 @@
-//
+import ManagementPageHeader from "@/components/shared/ManagementPageHeader";
 
-export default function ManagePatientsPage() {
+export default async function ManagePatientsPage() {
   return (
     <div className="">
-      <h1 className="">This is ManagePatientsPage component</h1>
+      <ManagementPageHeader
+        title="Patient Management"
+        description="Manage patient information and details"
+      />
     </div>
   );
 }

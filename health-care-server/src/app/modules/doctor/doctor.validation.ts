@@ -36,17 +36,3 @@ export const UpdateDoctorSchema = z.object({
     deleteIds: z.array(z.string()),
   }),
 });
-
-/**
-  "doctor": {},
-  "specialties": [
-      {
-          "id": "specialty id",
-          "isDelete": false
-      },
-      {
-          "id": "specialty id",
-          "isDelete": true
-      }
-  ]
- */

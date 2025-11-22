@@ -1,33 +1,58 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+"use server";
 
-import { iResponse } from "@/interfaces";
+import { iAdmin } from "@/interfaces/admin.interfaces";
+import { iDoctor } from "@/interfaces/doctor.interfaces";
+import { iPatient } from "@/interfaces/patient.interfaces";
 import { iUser } from "@/interfaces/user.interfaces";
-import mergeApi from "@/utility/merge-api";
+import { _fetch } from "@/utility/_fetch";
+import { JwtPayload } from "jsonwebtoken";
 
-export default async function getUser(cookie?: string, cache?: RequestCache) {
-  const options: RequestInit = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  if (cookie) options.headers = { ...options.headers, cookie };
-  else options.credentials = "include";
-  if (cache) options.cache = cache;
-
-  try {
-    const res = await fetch(mergeApi("/user/me"), options);
-    if (!res.ok) throw new Error("Failed to fetch authentication status.");
-
-    const { success, message, data } = (await res.json()) as iResponse<iUser>;
-
-    return { success, message, user: data };
-  } catch (err: any) {
-    console.log(err.message);
-    return {
-      isAuthenticated: false,
-      user: null,
-    };
-  }
+interface getUserReturnType extends JwtPayload {
+  patient: iPatient | null;
+  doctor: iDoctor | null;
+  admin: iAdmin | null;
 }
+
+export const getUser = async (): Promise<getUserReturnType> => {
+  try {
+    const { data } = await _fetch.get<iUser>("/auth/me", {
+      cache: "force-cache",
+      next: { tags: ["USER_INFO"] },
+    });
+
+    const user: getUserReturnType = {
+      id: data.id,
+      email: data.email,
+      role: data.role,
+      needPasswordChange: data.needPasswordChange,
+      status: data.status,
+      name: "",
+      avatar: "",
+      secondaryId: "",
+      patient: null,
+      doctor: null,
+      admin: null,
+    };
+
+    if (data.patient) {
+      user.name = data.patient.name;
+      user.avatar = data.patient.profilePhoto;
+      user.secondaryId = data.patient.id;
+      user.patient = data.patient;
+    } else if (data.doctor) {
+      user.name = data.doctor.name;
+      user.avatar = data.doctor.profilePhoto;
+      user.secondaryId = data.doctor.id;
+      user.doctor = data.doctor;
+    } else if (data.admin) {
+      user.name = data.admin.name;
+      user.avatar = data.admin.profilePhoto;
+      user.secondaryId = data.admin.id;
+      user.admin = data.admin;
+    }
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};

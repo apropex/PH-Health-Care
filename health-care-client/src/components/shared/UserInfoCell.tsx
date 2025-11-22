@@ -12,6 +12,8 @@ export default function UserInfoCell({ name, email, avatar }: UserInfoCellProps)
     <div className="flex text-center justify-start gap-1 w-auto">
       {avatar ? (
         <Image
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
           src={avatar}
           alt={name}
           width={40}

@@ -89,6 +89,8 @@ export default function SpecialtyFormDialog({
           <div className="size-20 rounded-full border ">
             {image ? (
               <Image
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
                 src={URL.createObjectURL(image)}
                 alt="Profile Image"
                 width={80}

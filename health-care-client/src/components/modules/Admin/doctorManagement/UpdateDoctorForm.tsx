@@ -43,6 +43,7 @@ export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [specialtiesIds, setSpecialtiesIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -78,8 +79,8 @@ export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
       previousIds,
       specialtiesIds
     );
-
     setAvatarError(null);
+    setLoading(true);
     const result = await updateDoctor(
       doctor.id,
       values,
@@ -90,6 +91,7 @@ export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
       router.push("/admin/dashboard/manage-doctors");
       toast.success(result.message);
     } else toast.error(result.message);
+    setLoading(true);
   }
 
   return (
@@ -105,6 +107,7 @@ export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
         onSubmit={onSubmit}
         setSpecialtiesIds={setSpecialtiesIds}
         specialties={defaultItems}
+        loading={loading}
         isEdit={true}
       />
     </div>

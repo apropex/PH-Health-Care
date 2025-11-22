@@ -3,48 +3,109 @@
 import LoadingButton from "@/components/buttons/LoadingButton";
 import { Label } from "@/components/ui/label";
 import Password from "@/components/ui/password";
-import { useState } from "react";
+import { resetPassword } from "@/services/auth/auth.password";
+import { extractJSONError } from "@/utility/extractJSONError";
+import { passwordRegex } from "@/zod/patient-validation";
+import { FormEvent, useState } from "react";
+import { toast } from "sonner";
 
-export default function ResetPassword() {
+export default function ResetPasswordForm() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!oldPassword.trim()) {
+      setError("Old password is required");
+      return;
+    }
+
+    if (!passwordRegex.test(newPassword)) {
+      setError(
+        "Password must contain at least 1 letter, 1 number, 1 symbol and be 6+ characters"
+      );
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Password did not match");
+      return;
+    }
+
+    setError(null);
+    setLoading(true);
+    try {
+      const result = await resetPassword({ oldPassword, newPassword });
+
+      if (result.success) {
+        toast.success(result.message);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else setError(result.message);
+    } catch (error) {
+      const err = extractJSONError(error);
+      setError(err?.message || "Failed to reset password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="w-full border rounded-sm px-4 py-6 flex justify-between flex-wrap flex-col md:flex-row gap-8">
-      <div className="flex-1">
-        <h3 className="text-xl">Reset your password</h3>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Keep your account safe by regularly updating your password. To proceed, first
-          enter your current password to verify your identity. Then create a new, strong
-          password that&apos;s at least 8 characters long and includes a combination of
-          uppercase and lowercase letters, numbers, and special symbols. Finally, re-type
-          the new password in the confirmation field to ensure accuracy. Once submitted,
-          you&apos;ll be logged out automatically and will need to sign in again with your
-          new credentials.
-        </p>
+    <form className="flex-1 space-y-5" onSubmit={handleSubmit}>
+      {error && (
+        <span className="inline-block text-sm text-destructive bg-destructive/8 py-1 px-2 rounded-xs">
+          {error}
+        </span>
+      )}
+
+      <div>
+        <Label>
+          Old Password
+          <span className="text-sm text-destructive">*</span>
+        </Label>
+        <Password
+          className="rounded-xs"
+          value={oldPassword}
+          onChange={({ target }) => setOldPassword(target.value)}
+        />
+      </div>
+      <div>
+        <Label>
+          New Password
+          <span className="text-sm text-destructive">*</span>
+        </Label>
+        <Password
+          className="rounded-xs"
+          value={newPassword}
+          onChange={({ target }) => setNewPassword(target.value)}
+        />
+      </div>
+      <div>
+        <Label>
+          Confirm Password
+          <span className="text-sm text-destructive">*</span>
+        </Label>
+        <Password
+          className="rounded-xs"
+          value={confirmPassword}
+          onChange={({ target }) => setConfirmPassword(target.value)}
+        />
       </div>
 
-      <form className="flex-1 space-y-5" onSubmit={(e) => e.preventDefault()}>
-        <div>
-          <Label>Old Password</Label>
-          <Password className="rounded-xs" />
-        </div>
-        <div>
-          <Label>New Password</Label>
-          <Password className="rounded-xs" />
-        </div>
-        <div>
-          <Label>Confirm Password</Label>
-          <Password className="rounded-xs" />
-        </div>
-
-        <LoadingButton
-          isLoading={loading}
-          loadingText="Submitting..."
-          variant="outline"
-          className="rounded-xs w-full mt-auto"
-        >
-          Submit
-        </LoadingButton>
-      </form>
-    </div>
+      <LoadingButton
+        isLoading={loading}
+        loadingText="Submitting..."
+        variant="outline"
+        className="rounded-xs w-full mt-auto"
+      >
+        Submit
+      </LoadingButton>
+    </form>
   );
 }

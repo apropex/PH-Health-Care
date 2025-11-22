@@ -71,7 +71,7 @@ const getAllDoctors = async (query: iQuery) => {
     numberFields: doctorNumberFields,
   });
 
-  const { specialties, ...filterFields } = filters;
+  const { specialties, experience, appointmentFee, ...filterFields } = filters;
 
   const where = getSearchFilters({
     searchFields: doctorSearchFields,
@@ -79,13 +79,15 @@ const getAllDoctors = async (query: iQuery) => {
     filters: filterFields,
   }) as WhereInput;
 
+  if (!Array.isArray(where?.AND)) where.AND = [];
+
   if (specialties) {
     const specialtyCondition = {
       doctorSpecialties: {
         some: {
           specialties: {
             title: {
-              constants: specialties,
+              contains: specialties,
               mode: "insensitive",
             },
           },
@@ -93,8 +95,19 @@ const getAllDoctors = async (query: iQuery) => {
       },
     };
 
-    if (!Array.isArray(where?.AND)) where.AND = [];
     where.AND.push(specialtyCondition as WhereInput);
+  }
+
+  if (experience && typeof experience === "number") {
+    where.AND.push({
+      experience: { gte: experience },
+    });
+  }
+
+  if (appointmentFee && typeof appointmentFee === "number") {
+    where.AND.push({
+      appointmentFee: { lte: appointmentFee },
+    });
   }
 
   const include = {
@@ -126,26 +139,6 @@ const getAllDoctors = async (query: iQuery) => {
 };
 
 // update doctor
-
-/*
-received data
-
-{
-  "user": {},
-  "doctor": {},
-  "specialties": [
-      {
-          "id": "specialty id",
-          "isDelete": false
-      },
-      {
-          "id": "specialty id",
-          "isDelete": true
-      }
-  ]
-}
-
-*/
 
 interface iUpdateDoctor {
   doctor: Doctor;

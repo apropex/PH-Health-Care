@@ -73,7 +73,7 @@ export default function DeleteConfirmationDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription asChild>
             {description || (
               <p>
                 This action cannot be undone. This will permanently delete your{" "}

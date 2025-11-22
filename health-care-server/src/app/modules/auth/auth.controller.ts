@@ -19,7 +19,12 @@ const login = catchAsync(async (req, res) => {
   _response(res, { message: "User logged in successfully", data: user });
 });
 
-//
+const resetPassword = catchAsync(async (req, res) => {
+  await services.resetPassword(req.decoded?.id ?? "", req.body);
+  _response(res, {
+    message: "Password reset successfully!",
+  });
+});
 
 const getAccessTokenByRefreshToken = catchAsync(async (req, res) => {
   const existingRefreshToken = req.cookies.refreshToken;
@@ -72,4 +77,4 @@ const getAccessTokenByRefreshToken = catchAsync(async (req, res) => {
   _response(res, { message: "Token refreshed successfully!", data: null });
 });
 
-export default { login, getAccessTokenByRefreshToken };
+export default { login, getAccessTokenByRefreshToken, resetPassword };

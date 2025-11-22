@@ -7,6 +7,8 @@ export const specialtyColumns: iTableColumns<iSpecialty>[] = [
     header: "Icon",
     accessor: (specialty) => (
       <Image
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
         src={specialty.icon}
         alt={specialty.title}
         width={40}

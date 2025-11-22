@@ -18,6 +18,7 @@ export default function CreateDoctorForm({ specialties }: { specialties: iSpecia
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [specialtiesIds, setSpecialtiesIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -45,15 +46,15 @@ export default function CreateDoctorForm({ specialties }: { specialties: iSpecia
       setAvatarError("Avatar is required");
       return;
     }
-
-    // TODO: throw an error is specialtiesIds is []
-
     setAvatarError(null);
+    // TODO: throw an error is specialtiesIds is []
+    setLoading(true);
     const result = await createDoctor(values, specialtiesIds, avatar);
     if (result.success) {
       router.push("/admin/dashboard/manage-doctors");
       toast.success(result.message);
     } else toast.error(result.message);
+    setLoading(false);
   }
 
   return (
@@ -69,6 +70,7 @@ export default function CreateDoctorForm({ specialties }: { specialties: iSpecia
         onSubmit={onSubmit}
         setSpecialtiesIds={setSpecialtiesIds}
         specialties={specialties}
+        loading={loading}
       />
     </div>
   );

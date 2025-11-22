@@ -16,12 +16,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import join from "@/utility/joinText";
-import { CopyIcon, EditIcon, EllipsisVertical, EyeIcon, Trash2Icon } from "lucide-react";
+import {
+  ChevronsUpDown,
+  CopyIcon,
+  EditIcon,
+  EllipsisVertical,
+  EyeIcon,
+  Trash2Icon,
+} from "lucide-react";
 
 export interface iTableColumns<T> {
   header: string;
   accessor: keyof T | ((row: T) => React.ReactNode);
   className?: string;
+  sortKey?: keyof T;
 }
 
 interface iManagementTable<T> {
@@ -35,8 +43,20 @@ interface iManagementTable<T> {
   emptyMessage?: string;
 }
 
-export default function ManagementTable<T>(props: iManagementTable<T>) {
-  const { data, columns, onView, onEdit, onDelete, rowKey, emptyMessage } = props;
+export default function ManagementTable<T>({
+  data,
+  columns,
+  onView,
+  onEdit,
+  onDelete,
+  rowKey,
+  emptyMessage,
+}: iManagementTable<T>) {
+  //
+
+  const handleSort = (i: string | number | symbol | undefined) => {
+    if (!(typeof i === "string")) return;
+  };
 
   return (
     <div className="">
@@ -48,7 +68,17 @@ export default function ManagementTable<T>(props: iManagementTable<T>) {
                 key={join("management-table-head-", i)}
                 className={col.className}
               >
-                {col.header}
+                {col.sortKey ? (
+                  <span className="flex items-center gap-1.5 hover:text-foreground transition-colors font-medium select-none">
+                    {col.header}
+                    <ChevronsUpDown
+                      className="size-4 text-primary cursor-pointer"
+                      onClick={() => handleSort(col.sortKey)}
+                    />
+                  </span>
+                ) : (
+                  col.header
+                )}
               </TableHead>
             ))}
             <TableHead className="w-14">Actions</TableHead>

@@ -54,6 +54,8 @@ export default function Testimonials() {
                   <p className="text-muted-foreground mb-6">{testimonial.quote}</p>
                   <div className="flex items-center">
                     <Image
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
                       src={testimonial.image}
                       alt={testimonial.name}
                       width={64}

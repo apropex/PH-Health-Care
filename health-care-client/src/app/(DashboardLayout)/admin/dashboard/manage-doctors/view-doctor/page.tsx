@@ -35,6 +35,8 @@ export default async function DoctorView({ searchParams }: DoctorViewProps) {
             <div className="flex flex-col items-center gap-3">
               <div className="w-24 h-24 rounded-full overflow-hidden ring-1 ring-gray-300 dark:ring-slate-700">
                 <Image
+                  blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
+                  placeholder="blur"
                   src={doctor.profilePhoto}
                   alt={doctor.name}
                   width={96}
@@ -149,6 +151,8 @@ export default async function DoctorView({ searchParams }: DoctorViewProps) {
                     className="px-3 py-2 flex items-center gap-2 capitalize"
                   >
                     <Image
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
                       src={s.icon}
                       alt={s.title}
                       width={16}

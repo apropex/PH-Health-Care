@@ -17,6 +17,7 @@ export const doctorColumns: iTableColumns<iDoctor>[] = [
         avatar={doctor.profilePhoto}
       />
     ),
+    sortKey: "name",
   },
   {
     header: "Designation",
@@ -50,6 +51,7 @@ export const doctorColumns: iTableColumns<iDoctor>[] = [
   {
     header: "Fee",
     accessor: ({ appointmentFee }) => join(appointmentFee, " /-"),
+    sortKey: "appointmentFee",
   },
   {
     header: "Ratting",
@@ -61,10 +63,12 @@ export const doctorColumns: iTableColumns<iDoctor>[] = [
         </span>
       </div>
     ),
+    sortKey: "averageRating",
   },
   {
     header: "Joined",
     accessor: ({ createdAt }) => formatDate(createdAt),
+    sortKey: "createdAt",
   },
   {
     header: "Status",

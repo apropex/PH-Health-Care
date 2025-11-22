@@ -15,6 +15,8 @@ export default function Hero() {
   return (
     <div className="relative overflow-hidden -mt-16">
       <Image
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
         src={heroImgLight}
         width={1000}
         height={0}
@@ -22,6 +24,8 @@ export default function Hero() {
         className="object-cover absolute w-full h-full dark:hidden blur-xs"
       />
       <Image
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
         src={heroImgDark}
         width={1000}
         height={0}

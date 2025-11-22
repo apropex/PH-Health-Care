@@ -5,33 +5,13 @@ import { _fetch } from "@/utility/_fetch";
 import { errorResponse } from "@/utility/errorResponse";
 import { makeFormData } from "@/utility/makeFormData";
 import { iZodValidatorReturns, zodParseResult } from "@/utility/zodValidatorFn";
-import z from "zod";
+import { registerValidation_client } from "@/zod/patient-validation";
 import { login } from "./login";
 
 // === Return Type ===
 interface iRegisterResponse extends iZodValidatorReturns {
   message?: string;
 }
-
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/;
-
-const registerValidation = z
-  .object({
-    name: z.string().min(3, "Name is required"),
-    address: z.string().optional(),
-    email: z.email("Valid email is required"),
-    password: z
-      .string()
-      .regex(
-        passwordRegex,
-        "Password must contain at least 1 letter, 1 number, 1 symbol and be 6+ characters"
-      ),
-    confirmPassword: z.string({ error: "Passwords do not match" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
 
 export const registerPatient = async (
   _: any,
@@ -54,7 +34,7 @@ export const registerPatient = async (
         password,
         confirmPassword,
       },
-      registerValidation
+      registerValidation_client
     );
 
     if (!zodRes.success) return zodRes;

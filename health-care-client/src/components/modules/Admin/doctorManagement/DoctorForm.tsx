@@ -1,8 +1,8 @@
 "use client";
 
+import LoadingButton from "@/components/buttons/LoadingButton";
 import { PasswordInput } from "@/components/custom-ui/password-input";
 import CustomMultiSelect from "@/components/CustomMultiSelect";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -30,6 +30,7 @@ import { SubmitHandler, UseFormReturn } from "react-hook-form";
 interface iProps {
   form: UseFormReturn<DoctorFormSchemaType_client>;
   onSubmit: SubmitHandler<DoctorFormSchemaType_client>;
+  loading: boolean;
   isEdit?: boolean;
   setSpecialtiesIds: Dispatch<SetStateAction<string[]>>;
   specialties: iSpecialty[];
@@ -38,6 +39,7 @@ interface iProps {
 export default function DoctorForm({
   form,
   onSubmit,
+  loading,
   isEdit,
   setSpecialtiesIds,
   specialties,
@@ -71,7 +73,7 @@ export default function DoctorForm({
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="John@example.com" {...field} />
+                    <Input placeholder="John@example.com" {...field} readOnly={isEdit} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -281,9 +283,15 @@ export default function DoctorForm({
         </div>
 
         <div className="flex justify-center mb-4 mt-8">
-          <Button type="submit" className="w-full max-w-sm">
-            Submit
-          </Button>
+          <LoadingButton
+            isLoading={loading}
+            loadingText={isEdit ? "Updating..." : "Creating..."}
+            type="submit"
+            className="w-full max-w-sm"
+            disabled={loading}
+          >
+            {isEdit ? "Update" : "Create"} Doctor
+          </LoadingButton>
         </div>
       </form>
     </Form>

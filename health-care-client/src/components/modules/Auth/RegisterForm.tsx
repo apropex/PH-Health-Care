@@ -63,6 +63,8 @@ export default function RegisterForm({ redirect }: { redirect?: string }) {
           <div className="size-20 rounded-full flex items-center justify-center border ">
             {avatar ? (
               <Image
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
                 src={URL.createObjectURL(avatar)}
                 alt="Profile Image"
                 width={80}

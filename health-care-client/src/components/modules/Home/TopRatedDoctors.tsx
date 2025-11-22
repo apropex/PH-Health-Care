@@ -36,6 +36,8 @@ const DoctorCard = ({ doctor }: { doctor: (typeof doctors)[0] }) => {
       <CardContent className="p-6">
         <div className="flex justify-center mb-5">
           <Image
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
             src={doctor.image}
             alt={doctor.name}
             width={96}

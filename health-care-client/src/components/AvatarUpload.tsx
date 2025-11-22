@@ -37,6 +37,8 @@ export default function AvatarUpload({ setAvatar, preview }: iProps) {
         >
           {previewUrl ? (
             <Image
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
               className="size-full object-cover"
               src={previewUrl}
               alt="Preview of uploaded image"

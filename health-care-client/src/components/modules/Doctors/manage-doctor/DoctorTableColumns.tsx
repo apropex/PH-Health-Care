@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { iDoctor } from "@/interfaces/user.interfaces";
+import { iDoctor } from "@/interfaces/doctor.interfaces";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
@@ -36,6 +36,8 @@ export const columns: ColumnDef<iDoctor>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center">
         <Image
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFC..."
           src={row.getValue("profilePhoto")}
           alt="DP"
           width={36}

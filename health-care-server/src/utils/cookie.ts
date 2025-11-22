@@ -1,5 +1,6 @@
 import { Response } from "express";
-import { isProd } from "../config";
+import _env, { isProd } from "../config";
+import { getDuration } from "./time_unit";
 
 const cookieOptions = {
   httpOnly: true,
@@ -11,14 +12,14 @@ export const setCookie = {
   accessToken(res: Response, token: string, maxAge?: number) {
     res.cookie("accessToken", token, {
       ...cookieOptions,
-      maxAge: maxAge || 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: maxAge ?? getDuration(_env.jwt.access_token_expire_time),
     });
   },
 
   refreshToken(res: Response, token: string, maxAge?: number) {
     res.cookie("refreshToken", token, {
       ...cookieOptions,
-      maxAge: maxAge || 1000 * 60 * 60 * 24 * 30, // 30 days
+      maxAge: maxAge ?? getDuration(_env.jwt.refresh_token_expire_time),
     });
   },
 
