@@ -12,7 +12,7 @@ import { forwardSetCookies } from "./cookie-utils";
 export async function handleRefreshToken(
   request: NextRequest,
   refreshToken: string,
-  pathname: string
+  pathname: string,
 ): Promise<NextResponse | { response: NextResponse; user: iUser }> {
   try {
     const res = await fetch(mergeApi("/auth/refresh-token-verifier"), {
@@ -42,7 +42,7 @@ export async function handleRefreshToken(
     return { response, user };
   } catch {
     const response = NextResponse.redirect(
-      new URL(`/login?dest=${encodeURIComponent(pathname)}`, request.url)
+      new URL(`/login?dest=${encodeURIComponent(pathname)}`, request.url),
     );
     response.cookies.delete("accessToken");
     response.cookies.delete("refreshToken");
@@ -51,7 +51,7 @@ export async function handleRefreshToken(
 }
 
 export async function setAccessTokenByRefreshToken(
-  refreshToken: string
+  refreshToken: string,
 ): Promise<tUserRole | null> {
   try {
     const response = await fetch(mergeApi("/auth/refresh-token-verifier"), {

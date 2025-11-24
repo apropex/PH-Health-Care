@@ -46,7 +46,7 @@ export default async function ProfileMenu() {
           <DropdownMenuContent
             className={cn(
               "w-56 max-h-80 md:max-h-96 overflow-y-auto mt-4",
-              " [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:my-6 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-600/40 dark:[&::-webkit-scrollbar-thumb]:bg-gray-300/40 [&::-webkit-scrollbar-thumb]:rounded-full"
+              " [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:my-6 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-600/40 dark:[&::-webkit-scrollbar-thumb]:bg-gray-300/40 [&::-webkit-scrollbar-thumb]:rounded-full",
             )}
             align="end"
           >

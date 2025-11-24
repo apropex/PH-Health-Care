@@ -26,7 +26,7 @@ export default function ComingSoon({ text }: { text?: string }) {
         className={cn(
           "min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden",
           "bg-linear-to-br from-slate-50 via-white to-emerald-50",
-          " dark:from-sky-950 dark:via-green-950 dark:to-emerald-950"
+          " dark:from-sky-950 dark:via-green-950 dark:to-emerald-950",
         )}
       >
         {/* Animated Background Orbs */}
@@ -98,8 +98,8 @@ export default function ComingSoon({ text }: { text?: string }) {
           {/* Footer */}
           <div className="pt-12 text-slate-400 text-sm">
             <p>
-              © 2025 <span className="font-medium text-emerald-600">PH-Health-Care</span>.
-              All rights reserved.
+              © 2025 <span className="font-medium text-emerald-600">PH-Health-Care</span>
+              . All rights reserved.
             </p>
           </div>
         </div>

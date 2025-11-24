@@ -13,7 +13,7 @@ export const registerValidation_client = z
       .string()
       .regex(
         passwordRegex,
-        "Password must contain at least 1 letter, 1 number, 1 symbol and be 6+ characters"
+        "Password must contain at least 1 letter, 1 number, 1 symbol and be 6+ characters",
       ),
     confirmPassword: z.string({ error: "Passwords do not match" }),
   })

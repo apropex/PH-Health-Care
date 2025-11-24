@@ -22,7 +22,7 @@ export default function Logout({ children }: iChildren) {
     try {
       setLoading(true);
       const result = await fetch("/api/logout", { method: "DELETE" }).then((res) =>
-        res.json()
+        res.json(),
       );
 
       if (result.success) {

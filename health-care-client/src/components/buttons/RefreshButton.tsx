@@ -43,7 +43,7 @@ export default function RefreshButton({
               {
                 "animate-spin": isPending,
               },
-              iconClass
+              iconClass,
             )}
           />
         ) : (
@@ -52,7 +52,7 @@ export default function RefreshButton({
               {
                 "animate-spin": isPending,
               },
-              iconClass
+              iconClass,
             )}
           />
         )}

@@ -21,7 +21,7 @@ interface iProps {
 
 export function generateDefaultItems<T extends { id: string }>(
   allItems: T[],
-  selectedIds: string[]
+  selectedIds: string[],
 ) {
   return allItems?.map((item) => ({
     ...item,
@@ -77,7 +77,7 @@ export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
 
     const { add: addIds, remove: deleteIds } = diffSelections(
       previousIds,
-      specialtiesIds
+      specialtiesIds,
     );
     setAvatarError(null);
     setLoading(true);
@@ -85,7 +85,7 @@ export default function UpdateDoctorForm({ doctor, specialties = [] }: iProps) {
       doctor.id,
       values,
       { addIds, deleteIds },
-      avatar ?? undefined
+      avatar ?? undefined,
     );
     if (result.success) {
       router.push("/admin/dashboard/manage-doctors");

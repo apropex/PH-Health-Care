@@ -127,10 +127,9 @@ const createSchedule = async (payload: SchedulePayload) => {
 };
 
 const getAllSchedule = async (req: Request) => {
-  const { page, take, skip, orderBy, filters } = configureQuery(
-    req.query,
-    scheduleFilterFields,
-  );
+  const { page, take, skip, orderBy, filters } = configureQuery(req.query, {
+    filterFields: scheduleFilterFields,
+  });
 
   const doctorSchedules = await prisma.doctorSchedule.findMany({
     where: { doctorId: req.decoded?.secondaryId ?? "" },

@@ -1,9 +1,11 @@
 //
 
+import SchedulePageHeader from "@/components/modules/Admin/scheduleManagement/SchedulePageHeader";
+
 export default function ManageSchedulesPage() {
   return (
     <div className="">
-      <h1 className="">This is ManageSchedulesPage component</h1>
+      <SchedulePageHeader />
     </div>
   );
 }

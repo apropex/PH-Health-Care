@@ -13,7 +13,7 @@ export interface iZodValidatorReturns<T = unknown> {
 
 export const zodParseResult = <T>(
   payload: T,
-  zodObject: ZodObject
+  zodObject: ZodObject,
 ): iZodValidatorReturns<T> => {
   const zodRes = zodObject.safeParse(payload);
 

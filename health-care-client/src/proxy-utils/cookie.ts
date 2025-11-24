@@ -1,5 +1,6 @@
 "use server";
 
+import { getDuration } from "@/utility/time_unit";
 import { parse } from "cookie";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,11 +12,11 @@ const CookieOptions = {
   sameSite: "none" as const,
   path: "/",
   // domain: process.env.COOKIE_DOMAIN, // e.g., .example.com
-  maxAge: 1000 * 60 * 60 * 24 * 3,
+  maxAge: getDuration("3d"),
 };
 
-const threeDays = 1000 * 60 * 60 * 24 * 3;
-const thirtyDays = 1000 * 60 * 60 * 24 * 30;
+const threeDays = getDuration("3d");
+const thirtyDays = getDuration("1M");
 
 /*
  * The `refresh` parameter (default: `true`) controls whether a refresh token is required

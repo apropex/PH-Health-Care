@@ -38,7 +38,7 @@ export default function CustomMultiSelect<T extends MultiItem>({
 
   const toggleItem = (id: string) => {
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, selected: !item.selected } : item))
+      prev.map((item) => (item.id === id ? { ...item, selected: !item.selected } : item)),
     );
   };
 

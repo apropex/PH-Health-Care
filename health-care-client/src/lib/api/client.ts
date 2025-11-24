@@ -23,7 +23,7 @@ class ApiClient {
 
   private async request<T = any>(
     endpoint: string,
-    config: ApiRequestConfig = {}
+    config: ApiRequestConfig = {},
   ): Promise<ApiResponse<T>> {
     const method = (config.method || "GET") as HttpMethod;
     const mergedConfig: ApiRequestConfig = {
@@ -120,7 +120,7 @@ class ApiClient {
   post<T = any>(
     endpoint: string,
     body?: any,
-    config?: Omit<ApiRequestConfig, "body" | "method">
+    config?: Omit<ApiRequestConfig, "body" | "method">,
   ) {
     return this.request<T>(endpoint, { ...config, method: "POST", body });
   }
@@ -128,7 +128,7 @@ class ApiClient {
   put<T = any>(
     endpoint: string,
     body?: any,
-    config?: Omit<ApiRequestConfig, "body" | "method">
+    config?: Omit<ApiRequestConfig, "body" | "method">,
   ) {
     return this.request<T>(endpoint, { ...config, method: "PUT", body });
   }
@@ -136,7 +136,7 @@ class ApiClient {
   patch<T = any>(
     endpoint: string,
     body?: any,
-    config?: Omit<ApiRequestConfig, "body" | "method">
+    config?: Omit<ApiRequestConfig, "body" | "method">,
   ) {
     return this.request<T>(endpoint, { ...config, method: "PATCH", body });
   }

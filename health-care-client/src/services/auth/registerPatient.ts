@@ -15,7 +15,7 @@ interface iRegisterResponse extends iZodValidatorReturns {
 
 export const registerPatient = async (
   _: any,
-  formData: FormData
+  formData: FormData,
 ): Promise<iRegisterResponse> => {
   const name = formData.get("name");
   const address = formData.get("address");
@@ -34,7 +34,7 @@ export const registerPatient = async (
         password,
         confirmPassword,
       },
-      registerValidation_client
+      registerValidation_client,
     );
 
     if (!zodRes.success) return zodRes;

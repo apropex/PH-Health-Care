@@ -15,7 +15,7 @@ interface getUserReturnType extends JwtPayload {
 
 export const getUser = async (): Promise<getUserReturnType> => {
   try {
-    const { data } = await _fetch.get<iUser>("/auth/me", {
+    const { data } = await _fetch.get<iUser>("/user/me", {
       cache: "force-cache",
       next: { tags: ["USER_INFO"] },
     });

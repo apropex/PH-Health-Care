@@ -34,7 +34,7 @@ export const updatePatient = async (
   id: string,
   data: registerValidationType_server,
   specialties: { addIds: string[]; deleteIds: string[] },
-  file?: File
+  file?: File,
 ) => {
   if (!id) return errorResponse({ message: "Doctor id not found" });
 

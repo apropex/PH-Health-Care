@@ -29,7 +29,7 @@ export default function SettingsNavbar() {
             {
               "bg-background border-b border-foreground/60 dark:border-foreground":
                 menu.href === pathname,
-            }
+            },
           )}
         >
           {menu.name}

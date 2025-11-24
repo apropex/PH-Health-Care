@@ -5,7 +5,9 @@
 import { UserRole } from "@prisma/client";
 import { Router } from "express";
 import { roleVerifier } from "../../middlewares/roleVerifier";
+import validateRequest from "../../middlewares/validateRequest";
 import controllers from "./schedule.controller";
+import { createScheduleSchema } from "./schedule.valication";
 
 const router = Router();
 
@@ -15,7 +17,11 @@ router.get(
   controllers.getAllSchedule,
 );
 
-router.post("/", controllers.createSchedule);
+router.post(
+  "/",
+  validateRequest(createScheduleSchema),
+  controllers.createSchedule,
+);
 
 router.delete("/:id", controllers.deleteSchedule);
 

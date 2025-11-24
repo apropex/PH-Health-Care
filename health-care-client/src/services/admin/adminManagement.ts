@@ -56,7 +56,7 @@ export const getAdminById = async (id: string) => {
 export const updateAdmin = async (
   id: string,
   data: CreateAdminSchemaType,
-  file?: File
+  file?: File,
 ) => {
   if (!id) return errorResponse({ message: "Admin id not found" });
 

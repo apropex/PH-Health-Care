@@ -58,13 +58,13 @@ export default function Specialties() {
               key={specialist.name}
               className={cn(
                 "text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1 shadow-[6px_12px_9px_rgba(0,0,0,0.3)]",
-                specialist.styles
+                specialist.styles,
               )}
             >
               <CardContent className="p-6">
                 <div
                   className={cn(
-                    "w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4"
+                    "w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4",
                   )}
                 >
                   <specialist.icon className={cn(specialist.iconColor)} size={32} />

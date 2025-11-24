@@ -17,7 +17,7 @@ import {
 export const createDoctor = async (
   data: DoctorFormSchemaType_client,
   specialties: string[],
-  file: File
+  file: File,
 ) => {
   try {
     if (!file) return errorResponse({ message: "Doctor image is required" });
@@ -74,7 +74,7 @@ export const updateDoctor = async (
   id: string,
   data: DoctorFormSchemaType_client,
   specialties: { addIds: string[]; deleteIds: string[] },
-  file?: File
+  file?: File,
 ) => {
   if (!id) return errorResponse({ message: "Doctor id not found" });
 

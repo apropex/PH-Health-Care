@@ -68,7 +68,7 @@ export function MobileMenuLinks() {
                 "transition-all duration-200",
                 {
                   "bg-primary hover:bg-primary/90 text-white": pathname === href,
-                }
+                },
               )}
             >
               {name}

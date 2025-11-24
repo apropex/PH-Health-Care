@@ -18,7 +18,7 @@ const specialtySchema = z.object({
 
 export async function createSpecialty(
   _: unknown,
-  formData: FormData
+  formData: FormData,
 ): Promise<iCreateSpecialtyResponse> {
   try {
     const rawData = { title: formData.get("title") };

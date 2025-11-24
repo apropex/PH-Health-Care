@@ -8,7 +8,7 @@ export const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 export const checkToken = async (
   token: string,
-  secret: "access" | "refresh"
+  secret: "access" | "refresh",
 ): Promise<JwtPayload | null> => {
   if (!accessTokenSecret || !refreshTokenSecret) return null;
 

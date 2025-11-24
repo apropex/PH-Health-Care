@@ -1,4 +1,7 @@
 import { iResponse } from "@/interfaces";
+import { checkToken } from "@/proxy-utils/check-token";
+import { getCookie } from "@/proxy-utils/cookie";
+import { setAccessTokenByRefreshToken } from "@/proxy-utils/refresh-token";
 
 const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
@@ -20,6 +23,16 @@ export async function fetchHelper<TResponse = unknown, TRequest = unknown>(
   requestInit: Options = {},
   data?: TRequest
 ): Promise<iResponse<TResponse>> {
+  const accessToken = (await getCookie("accessToken")) || null;
+  const refreshToken = (await getCookie("refreshToken")) || null;
+
+  if (accessToken) {
+    const decoded = await checkToken(accessToken, "access");
+    if ((!decoded || !decoded?.id) && refreshToken) {
+      await setAccessTokenByRefreshToken(refreshToken);
+    }
+  }
+
   const options = requestInit as RequestInit;
 
   const method = options.method?.toUpperCase() || "GET";
